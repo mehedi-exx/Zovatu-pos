@@ -26,18 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to toggle sidebar visibility
-    function toggleSidebar() {
-        if (sidebar && sidebar.classList.contains('visible')) {
-            closeSidebarFunc();
-        } else {
-            openSidebar();
-        }
-    }
-
     // Add click event listener to the menu toggle button
     if (menuToggle) {
-        menuToggle.addEventListener('click', toggleSidebar);
+        menuToggle.addEventListener('click', openSidebar);
     }
 
     // Add click event listener to the close button
@@ -66,7 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', function() {
         if (window.innerWidth <= 768) {
             closeSidebarFunc();
+        } else {
+            // On larger screens, ensure sidebar is hidden by default
+            // and only appears on click
+            closeSidebarFunc(); 
         }
     });
 });
+
 
