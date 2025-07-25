@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Billing Software</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-cash-register"></i> Billing Pro</h2>
+            </div>
+            <div class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="products.html" class="active"><i class="fas fa-box"></i> Products</a></li>
+                    <li><a href="customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                    <li><a href="sales.html"><i class="fas fa-shopping-cart"></i> Sales</a></li>
+                    <li><a href="purchase.html" id="purchaseLink"><i class="fas fa-truck"></i> Purchase</a></li>
+                    <li><a href="quotation.html" id="quotationLink"><i class="fas fa-file-invoice"></i> Quotations</a></li>
+                    <li><a href="reports.html" id="reportsLink"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="settings.html" id="settingsLink"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Header Bar -->
+            <div class="header-bar">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <span id="userInfo">Loading...</span>
+                    <button id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Products Content -->
+            <div class="page-header">
+                <h2><i class="fas fa-box"></i> Products Management</h2>
+                <div>
+                    <button class="btn-primary" onclick="showAddProductModal()">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                    <button class="btn-secondary" onclick="exportProducts()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="card">
+                <div class="grid-3">
+                    <div class="form-group">
+                        <input type="text" id="searchProducts" placeholder="Search products..." onkeyup="searchProducts()">
+                    </div>
+                    <div class="form-group">
+                        <select id="categoryFilter" onchange="filterProducts()">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="stockFilter" onchange="filterProducts()">
+                            <option value="">All Stock Levels</option>
+                            <option value="in-stock">In Stock</option>
+                            <option value="low-stock">Low Stock</option>
+                            <option value="out-of-stock">Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Table -->
+            <div class="card">
+                <table id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>Product Code</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Barcode</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Products will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Product</h3>
+                <span class="close" onclick="hideProductModal()">&times;</span>
+            </div>
+            <form id="productForm">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="productCode">Product Code *</label>
+                        <input type="text" id="productCode" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productName">Product Name *</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="productCategory">Category</label>
+                        <input type="text" id="productCategory" placeholder="e.g., Electronics, Clothing">
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price *</label>
+                        <input type="number" id="productPrice" step="0.01" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="productStock">Stock Quantity</label>
+                        <input type="number" id="productStock" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="productUnit">Unit</label>
+                        <input type="text" id="productUnit" placeholder="e.g., pcs, kg, ltr">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" rows="3"></textarea>
+                </div>
+                
+                <!-- Barcode Section -->
+                <div class="form-group">
+                    <label for="barcodeType">Barcode Type</label>
+                    <select id="barcodeType" onchange="generateBarcode()">
+                        <option value="CODE128">CODE128 (Recommended)</option>
+                        <option value="CODE39">CODE39</option>
+                        <option value="EAN13">EAN13</option>
+                        <option value="EAN8">EAN8</option>
+                        <option value="UPC">UPC</option>
+                        <option value="ITF14">ITF14</option>
+                        <option value="MSI">MSI</option>
+                        <option value="pharmacode">Pharmacode</option>
+                        <option value="codabar">Codabar</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="barcodeValue">Barcode Value</label>
+                    <input type="text" id="barcodeValue" placeholder="Auto-generated or enter custom">
+                    <button type="button" onclick="generateBarcode()" class="btn-secondary mt-20">
+                        <i class="fas fa-sync"></i> Generate Barcode
+                    </button>
+                </div>
+                
+                <!-- Barcode Preview -->
+                <div class="form-group">
+                    <label>Barcode Preview</label>
+                    <div id="barcodePreview" class="text-center" style="border: 1px solid #ddd; padding: 20px; margin-top: 10px;">
+                        <svg id="barcode"></svg>
+                    </div>
+                </div>
+                
+                <div class="form-group text-center">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Product
+                    </button>
+                    <button type="button" onclick="hideProductModal()" class="btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Barcode Print Modal -->
+    <div id="barcodePrintModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Print Barcode</h3>
+                <span class="close" onclick="hideBarcodeModal()">&times;</span>
+            </div>
+            <div class="text-center">
+                <div id="printBarcodePreview" style="border: 1px solid #ddd; padding: 20px; margin: 20px 0;">
+                    <!-- Barcode will be displayed here -->
+                </div>
+                <div class="form-group">
+                    <label for="printQuantity">Print Quantity</label>
+                    <input type="number" id="printQuantity" value="1" min="1" max="100">
+                </div>
+                <button onclick="printBarcode()" class="btn-primary">
+                    <i class="fas fa-print"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>
+

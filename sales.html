@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales - Billing Software</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-cash-register"></i> Billing Pro</h2>
+            </div>
+            <div class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="products.html"><i class="fas fa-box"></i> Products</a></li>
+                    <li><a href="customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                    <li><a href="sales.html" class="active"><i class="fas fa-shopping-cart"></i> Sales</a></li>
+                    <li><a href="purchase.html" id="purchaseLink"><i class="fas fa-truck"></i> Purchase</a></li>
+                    <li><a href="quotation.html" id="quotationLink"><i class="fas fa-file-invoice"></i> Quotations</a></li>
+                    <li><a href="reports.html" id="reportsLink"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="settings.html" id="settingsLink"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Header Bar -->
+            <div class="header-bar">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <span id="userInfo">Loading...</span>
+                    <button id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sales Content -->
+            <div class="page-header">
+                <h2><i class="fas fa-shopping-cart"></i> Sales & Invoicing</h2>
+                <div>
+                    <button class="btn-primary" onclick="showCreateInvoiceModal()">
+                        <i class="fas fa-plus"></i> Create Invoice
+                    </button>
+                    <button class="btn-secondary" onclick="showScannerModal()">
+                        <i class="fas fa-barcode"></i> Scanner Billing
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="card">
+                <div class="grid-3">
+                    <div class="form-group">
+                        <input type="text" id="searchInvoices" placeholder="Search invoices..." onkeyup="searchInvoices()">
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="dateFrom" onchange="filterInvoices()">
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="dateTo" onchange="filterInvoices()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoices Table -->
+            <div class="card">
+                <table id="invoicesTable">
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoicesTableBody">
+                        <!-- Invoices will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Invoice Modal -->
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content" style="max-width: 90%; width: 1000px;">
+            <div class="modal-header">
+                <h3 id="invoiceModalTitle">Create Invoice</h3>
+                <span class="close" onclick="hideInvoiceModal()">&times;</span>
+            </div>
+            
+            <!-- Invoice Form -->
+            <form id="invoiceForm">
+                <!-- Customer Selection -->
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="invoiceCustomer">Customer</label>
+                        <select id="invoiceCustomer">
+                            <option value="">Walk-in Customer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoiceDate">Invoice Date</label>
+                        <input type="date" id="invoiceDate" required>
+                    </div>
+                </div>
+                
+                <!-- Product Search -->
+                <div class="form-group">
+                    <label for="productSearch">Add Products</label>
+                    <div style="position: relative;">
+                        <input type="text" id="productSearch" placeholder="Search products by name or scan barcode..." onkeyup="searchProductsForInvoice()" onkeydown="handleProductSearchKeydown(event)">
+                        <div id="productSuggestions" class="suggestions" style="display: none;">
+                            <!-- Product suggestions will appear here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Invoice Items -->
+                <div class="form-group">
+                    <label>Invoice Items</label>
+                    <table id="invoiceItemsTable">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Discount %</th>
+                                <th>Subtotal</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceItemsBody">
+                            <!-- Invoice items will be added here -->
+                        </tbody>
+                    </table>
+                    <div id="noItemsMessage" class="no-data">No items added yet</div>
+                </div>
+                
+                <!-- Invoice Totals -->
+                <div class="grid-2">
+                    <div></div>
+                    <div class="invoice-totals">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="invoiceSubtotal">$0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Overall Discount (%):</span>
+                            <input type="number" id="overallDiscount" value="0" min="0" max="100" onchange="calculateInvoiceTotal()">
+                        </div>
+                        <div class="total-row">
+                            <span>Tax (%):</span>
+                            <input type="number" id="invoiceTax" value="0" min="0" max="100" onchange="calculateInvoiceTotal()">
+                        </div>
+                        <div class="total-row grand-total">
+                            <span><strong>Grand Total:</strong></span>
+                            <span id="invoiceGrandTotal"><strong>$0.00</strong></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Invoice Notes -->
+                <div class="form-group">
+                    <label for="invoiceNotes">Notes</label>
+                    <textarea id="invoiceNotes" rows="2" placeholder="Additional notes for this invoice"></textarea>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="form-group text-center">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Invoice
+                    </button>
+                    <button type="button" onclick="saveAndPrintInvoice()" class="btn-success">
+                        <i class="fas fa-print"></i> Save & Print
+                    </button>
+                    <button type="button" onclick="hideInvoiceModal()" class="btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scanner Billing Modal -->
+    <div id="scannerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Scanner Billing</h3>
+                <span class="close" onclick="hideScannerModal()">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="scannerInput">Scan or Enter Product Code</label>
+                <input type="text" id="scannerInput" placeholder="Scan barcode or enter product code..." onkeydown="handleScannerInput(event)" autofocus>
+            </div>
+            
+            <!-- Scanned Items -->
+            <div class="form-group">
+                <label>Scanned Items</label>
+                <table id="scannedItemsTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scannedItemsBody">
+                        <!-- Scanned items will be added here -->
+                    </tbody>
+                </table>
+                <div id="noScannedItemsMessage" class="no-data">No items scanned yet</div>
+            </div>
+            
+            <!-- Scanner Totals -->
+            <div class="invoice-totals">
+                <div class="total-row grand-total">
+                    <span><strong>Total:</strong></span>
+                    <span id="scannerTotal"><strong>$0.00</strong></span>
+                </div>
+            </div>
+            
+            <!-- Scanner Actions -->
+            <div class="form-group text-center">
+                <button onclick="completeScannerSale()" class="btn-primary">
+                    <i class="fas fa-check"></i> Complete Sale
+                </button>
+                <button onclick="printScannerReceipt()" class="btn-success">
+                    <i class="fas fa-print"></i> Print Receipt
+                </button>
+                <button onclick="clearScannerItems()" class="btn-danger">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Details Modal -->
+    <div id="invoiceDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Invoice Details</h3>
+                <span class="close" onclick="hideInvoiceDetailsModal()">&times;</span>
+            </div>
+            <div id="invoiceDetailsContent">
+                <!-- Invoice details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/sales.js"></script>
+</body>
+</html>
+
