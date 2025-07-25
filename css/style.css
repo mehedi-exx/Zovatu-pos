@@ -244,7 +244,7 @@ body {
 }
 
 .sidebar.visible {
-    width: 250px; /* Full-screen width */
+    width: 100%; /* Full-screen width */
 }
 
 .sidebar a {
@@ -276,7 +276,7 @@ body {
 }
 
 .main-content.expanded {
-    margin-left: 250px; /* Adjust main content when sidebar is open */
+    margin-left: 0; /* No margin when sidebar is full-screen */
 }
 
 .page-header {
@@ -458,6 +458,13 @@ table .actions button {
 
     .invoice-totals .total-row input {
         width: 60px;
+    }
+
+    /* Sales Overview specific styles for mobile */
+    .card canvas {
+        max-height: 200px; /* Limit height of chart on mobile */
+        width: 100% !important; /* Ensure it takes full width */
+        height: auto !important; /* Maintain aspect ratio */
     }
 }
 
