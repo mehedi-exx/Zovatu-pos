@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - Billing Software</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
@@ -206,6 +209,14 @@
                     <label for="printQuantity">Print Quantity</label>
                     <input type="number" id="printQuantity" value="1" min="1" max="100">
                 </div>
+                <div class="form-group">
+                    <label for="barcodePrintWidth">Barcode Width (px)</label>
+                    <input type="number" id="barcodePrintWidth" value="2" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="barcodePrintHeight">Barcode Height (px)</label>
+                    <input type="number" id="barcodePrintHeight" value="100" min="1">
+                </div>
                 <button onclick="printBarcode()" class="btn-primary">
                     <i class="fas fa-print"></i> Print
                 </button>
@@ -216,6 +227,7 @@
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/products.js"></script>
+    <script src="js/menu.js"></script>
 </body>
 </html>
 
