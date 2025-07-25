@@ -406,7 +406,11 @@ table .actions button {
 /* Responsive Design */
 @media (max-width: 768px) {
     .sidebar {
-        transform: translateX(-250px);
+        width: 100%;
+        position: relative;
+        transform: translateX(0);
+        height: auto;
+        box-shadow: none;
     }
 
     .sidebar.visible {
@@ -415,19 +419,59 @@ table .actions button {
 
     .main-content {
         margin-left: 0;
+        padding: 10px;
     }
 
     .main-content.expanded {
         margin-left: 0;
     }
 
+    .header-bar {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
     .header-bar .menu-toggle {
-        display: block;
+        display: none; /* Hide toggle button on mobile if sidebar is always visible */
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .page-header h2 {
+        margin-bottom: 10px;
+    }
+
+    .page-header button {
+        margin-left: 0;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr; /* Single column layout for grids on small screens */
     }
 
     .login-box {
-        margin: 20px;
-        padding: 20px;
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+
+    table th, table td {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+
+    .invoice-totals .total-row input {
+        width: 60px;
     }
 }
 
