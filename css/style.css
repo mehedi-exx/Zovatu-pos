@@ -398,12 +398,7 @@ table .actions button {
 
 .modal-header .close:hover,
 .modal-header .close:focus {
-    color: var(--dark-color);
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Responsive Design */
+    color: var/* Responsive Design */
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
@@ -417,9 +412,15 @@ table .actions button {
         transform: translateX(0);
     }
 
+    .app-layout {
+        flex-direction: column;
+    }
+
     .main-content {
         margin-left: 0;
         padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .main-content.expanded {
@@ -465,9 +466,17 @@ table .actions button {
         padding: 15px;
     }
 
+    table {
+        display: block;
+        width: 100%; /* Ensure table takes full width */
+        overflow-x: auto; /* Allow horizontal scroll for tables if content overflows */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+
     table th, table td {
         padding: 8px 10px;
         font-size: 0.9em;
+        white-space: normal; /* Allow text to wrap within cells */
     }
 
     .invoice-totals .total-row input {
