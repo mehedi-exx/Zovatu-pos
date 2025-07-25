@@ -119,7 +119,7 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
-    box-sizing: border-box; /* Ensures padding doesn't increase width */
+    box-sizing: border-box;
 }
 
 .form-group textarea {
@@ -183,85 +183,18 @@ body {
 .app-layout {
     display: flex;
     min-height: 100vh;
-}
-
-.sidebar {
-    width: 250px;
-    background-color: var(--sidebar-bg);
-    color: var(--sidebar-text);
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease-in-out;
-    position: fixed;
-    height: 100%;
-    z-index: 1000;
-    transform: translateX(-250px); /* Initially hidden */
-}
-
-.sidebar.visible {
-    transform: translateX(0); /* Visible when toggled */
-}
-
-.sidebar-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.sidebar-header h2 {
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--sidebar-text);
-}
-
-.sidebar-nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar-nav li {
-    margin-bottom: 10px;
-}
-
-.sidebar-nav a {
-    color: var(--sidebar-text);
-    text-decoration: none;
-    padding: 10px 15px;
-    display: block;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.sidebar-nav a:hover,
-.sidebar-nav a.active {
-    background-color: #34495e;
-}
-
-.sidebar-nav a i {
-    margin-right: 10px;
-}
-
-.main-content {
-    flex-grow: 1;
-    margin-left: 0; /* Initially no margin */
-    padding: 20px;
-    transition: margin-left 0.3s ease-in-out;
-}
-
-.main-content.expanded {
-    margin-left: 250px; /* When sidebar is visible */
 }
 
 .header-bar {
     background-color: var(--card-background);
-    padding: 15px 20px;
+    padding: 10px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    border-radius: 8px;
+    border-radius: 0;
+    margin-bottom: 0;
 }
 
 .header-bar .menu-toggle {
@@ -270,6 +203,7 @@ body {
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--text-color);
+    display: block;
 }
 
 .header-bar .user-info {
@@ -289,6 +223,60 @@ body {
     padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.main-content-wrapper {
+    display: flex;
+    flex-grow: 1;
+}
+
+.sidebar {
+    height: 100%;
+    width: 0; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    background-color: black; /* Black sidebar */
+    overflow-x: hidden;
+    transition: 0.5s; /* Smooth transition */
+    padding-top: 60px; /* Space for close button */
+}
+
+.sidebar.visible {
+    width: 250px; /* Full-screen width */
+}
+
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: white; /* White main dashboard */
+    transition: margin-left .5s;
+}
+
+.main-content.expanded {
+    margin-left: 250px; /* Adjust main content when sidebar is open */
 }
 
 .page-header {
@@ -350,15 +338,15 @@ table .actions button {
 
 /* Modals */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1001; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1001;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
     justify-content: center;
     align-items: center;
 }
@@ -398,42 +386,30 @@ table .actions button {
 
 .modal-header .close:hover,
 .modal-header .close:focus {
-    color: var/* Responsive Design */
+    color: var(--danger-color);
+    text-decoration: none;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .sidebar {
-        width: 100%;
-        position: relative;
-        transform: translateX(0);
-        height: auto;
-        box-shadow: none;
+        width: 0; /* Hidden by default on mobile */
     }
 
     .sidebar.visible {
-        transform: translateX(0);
-    }
-
-    .app-layout {
-        flex-direction: column;
+        width: 100%; /* Full width for mobile */
     }
 
     .main-content {
-        margin-left: 0;
-        padding: 10px;
-        width: 100%;
-        box-sizing: border-box;
+        margin-left: 0; /* No margin on mobile */
     }
 
     .main-content.expanded {
-        margin-left: 0;
+        margin-left: 0; /* No margin on mobile even when expanded */
     }
 
     .header-bar {
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-
-    .header-bar .menu-toggle {
-        display: none; /* Hide toggle button on mobile if sidebar is always visible */
+        padding: 8px 15px;
     }
 
     .page-header {
@@ -444,6 +420,7 @@ table .actions button {
 
     .page-header h2 {
         margin-bottom: 10px;
+        font-size: 1.5rem;
     }
 
     .page-header button {
@@ -452,8 +429,8 @@ table .actions button {
         margin-bottom: 5px;
     }
 
-    .grid-2, .grid-3, .grid-4 {
-        grid-template-columns: 1fr; /* Single column layout for grids on small screens */
+    .grid-2, .grid-3, .grid-4, .grid-responsive {
+        grid-template-columns: 1fr;
     }
 
     .login-box {
@@ -468,15 +445,15 @@ table .actions button {
 
     table {
         display: block;
-        width: 100%; /* Ensure table takes full width */
-        overflow-x: auto; /* Allow horizontal scroll for tables if content overflows */
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     table th, table td {
         padding: 8px 10px;
         font-size: 0.9em;
-        white-space: normal; /* Allow text to wrap within cells */
+        white-space: nowrap;
     }
 
     .invoice-totals .total-row input {
@@ -535,11 +512,6 @@ table .actions button {
     gap: 20px;
 }
 
-/* Specific styles for different pages will be added via JS */
-
-
-
-
 /* Notification Styles */
 .notification {
     position: fixed;
@@ -557,9 +529,19 @@ table .actions button {
     max-width: 400px;
     animation: slideIn 0.3s ease;
 }
-.notification-success { border-left-color: var(--success-color); }
-.notification-error { border-left-color: var(--danger-color); }
-.notification-warning { border-left-color: var(--warning-color); }
+
+.notification-success { 
+    border-left-color: var(--success-color); 
+}
+
+.notification-error { 
+    border-left-color: var(--danger-color); 
+}
+
+.notification-warning { 
+    border-left-color: var(--warning-color); 
+}
+
 .notification button {
     background: none;
     border: none;
@@ -567,9 +549,26 @@ table .actions button {
     color: var(--secondary-color);
     margin-left: auto;
 }
+
 @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from { 
+        transform: translateX(100%); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
+}
+
+.footer-bar {
+    background-color: var(--card-background);
+    padding: 10px 20px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-top: auto;
 }
 
 
