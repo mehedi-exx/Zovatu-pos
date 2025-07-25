@@ -111,10 +111,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // If on login page
     if (document.getElementById('loginForm')) {
         // Check if already logged in
-        if (isLoggedIn()) {
-            redirectToDashboard();
-            return;
-        }
+        // if (isLoggedIn()) {
+        //     redirectToDashboard();
+        //     return;
+        // }
         
         // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', function(e) {

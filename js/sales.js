@@ -30,12 +30,13 @@ function setupEventListeners() {
     // Invoice form submission
     document.getElementById('invoiceForm').addEventListener('submit', handleInvoiceSubmit);
     
-    // Product search input
-    document.getElementById('productSearch').addEventListener('input', debounce(searchProductsForInvoice, 300));
-    
+    // Product search input and scanner support
+    document.getElementById("productSearch").addEventListener("input", debounce(searchProductsForInvoice, 300));
+    document.getElementById("productSearch").addEventListener("keydown", handleProductSearchKeydown);
+
     // Overall discount and tax change
-    document.getElementById('overallDiscount').addEventListener('input', calculateInvoiceTotal);
-    document.getElementById('invoiceTax').addEventListener('input', calculateInvoiceTotal);
+    document.getElementById("overallDiscount").addEventListener("input", calculateInvoiceTotal);
+    document.getElementById("invoiceTax").addEventListener("input", calculateInvoiceTotal);
 }
 
 // Set default date
@@ -306,7 +307,7 @@ function displayInvoiceItems() {
                        style="width: 60px;">
             </td>
             <td>
-                <input type="number" value="${item.discount}" min="0" max="100" 
+                <input type="number" value="${item.discount}" min="0" 
                        onchange="updateItemDiscount(${index}, this.value)" 
                        style="width: 60px;">
             </td>
@@ -364,9 +365,8 @@ function calculateInvoiceTotal() {
     const subtotal = currentInvoice.items.reduce((sum, item) => sum + item.subtotal, 0);
     
     // Apply overall discount
-    const overallDiscount = parseFloat(document.getElementById('overallDiscount').value) || 0;
-    const discountAmount = subtotal * (overallDiscount / 100);
-    const afterDiscount = subtotal - discountAmount;
+    const overallDiscount = parseFloat(document.getElementById("overallDiscount").value) || 0;
+    const afterDiscount = subtotal - overallDiscount;
     
     // Apply tax
     const tax = parseFloat(document.getElementById('invoiceTax').value) || 0;
@@ -412,18 +412,22 @@ function handleInvoiceSubmit(e) {
         createdBy: auth.getCurrentUser().username
     };
     
-    // Update product stock
-    let stockUpdateFailed = false;
-    for (const item of invoice.items) {
-        if (!window.productsModule.updateProductStock(item.productId, item.quantity, 'subtract')) {
-            stockUpdateFailed = true;
-            utils.showNotification(`Insufficient stock for ${item.productName}`, 'error');
-            break;
+    // Update product stock and check for insufficient stock
+    for (const item of currentInvoice.items) {
+        const product = products.find(p => p.id === item.productId);
+        if (!product) {
+            utils.showNotification(`Product not found: ${item.productName}`, 'error');
+            return;
+        }
+        if (product.stock < item.quantity) {
+            utils.showNotification(`Insufficient stock for ${item.productName}. Available: ${product.stock}`, 'error');
+            return;
         }
     }
-    
-    if (stockUpdateFailed) {
-        return;
+
+    // If all stock checks pass, then proceed to update stock and save invoice
+    for (const item of currentInvoice.items) {
+        window.productsModule.updateProductStock(item.productId, item.quantity, 'subtract');
     }
     
     // Save invoice
@@ -484,14 +488,19 @@ function printInvoice(invoiceId) {
 
 // Generate invoice HTML
 function generateInvoiceHTML(invoice, forPrint = false) {
-    const settings = utils.getFromStorage('settings', {});
-    
+    const settings = utils.getFromStorage("settings", {});
+    const shopName = settings.shopName || "Billing Pro";
+    const shopAddress = settings.shopAddress || "";
+    const shopPhone = settings.shopPhone || "";
+    const shopEmail = settings.shopEmail || "";
+    const customMessage = settings.customMessage || "Thank you for your business!";
+
     return `
         <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
-                <h1 style="color: #007bff; margin: 0;">${settings.shopName || 'Billing Pro'}</h1>
-                <p style="margin: 5px 0;">${settings.shopAddress || ''}</p>
-                <p style="margin: 5px 0;">Phone: ${settings.shopPhone || ''} | Email: ${settings.shopEmail || ''}</p>
+                <h1 style="color: #007bff; margin: 0;">${shopName}</h1>
+                <p style="margin: 5px 0;">${shopAddress}</p>
+                <p style="margin: 5px 0;">Phone: ${shopPhone} | Email: ${shopEmail}</p>
             </div>
             
             <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
@@ -523,7 +532,7 @@ function generateInvoiceHTML(invoice, forPrint = false) {
                             <td style="border: 1px solid #ddd; padding: 10px;">${item.productName} (${item.productCode})</td>
                             <td style="border: 1px solid #ddd; padding: 10px; text-align: right;">${utils.formatCurrency(item.price)}</td>
                             <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">${item.quantity}</td>
-                            <td style="border: 1px solid #ddd; padding: 10px; text-align: right;">${item.discount}%</td>
+                            <td style="border: 1px solid #ddd; padding: 10px; text-align: right;">${utils.formatCurrency(item.discount)}</td>
                             <td style="border: 1px solid #ddd; padding: 10px; text-align: right;">${utils.formatCurrency(item.subtotal)}</td>
                         </tr>
                     `).join('')}
@@ -532,15 +541,13 @@ function generateInvoiceHTML(invoice, forPrint = false) {
             
             <div style="text-align: right; margin-bottom: 20px;">
                 <p><strong>Subtotal: ${utils.formatCurrency(invoice.subtotal)}</strong></p>
-                ${invoice.overallDiscount > 0 ? `<p>Overall Discount (${invoice.overallDiscount}%): -${utils.formatCurrency(invoice.subtotal * invoice.overallDiscount / 100)}</p>` : ''}
-                ${invoice.tax > 0 ? `<p>Tax (${invoice.tax}%): ${utils.formatCurrency((invoice.subtotal - invoice.subtotal * invoice.overallDiscount / 100) * invoice.tax / 100)}</p>` : ''}
-                <h3 style="color: #007bff;">Grand Total: ${utils.formatCurrency(invoice.grandTotal)}</h3>
+                ${invoice.overallDiscount > 0 ? `<p>Overall Discount: -${utils.formatCurrency(invoice.overallDiscount)}<                ${invoice.tax > 0 ? `<p>Tax (${invoice.tax}%): ${utils.formatCurrency((invoice.subtotal - invoice.overallDiscount) * invoice.tax / 100)}</p>` : ''}   <h3 style="color: #007bff;">Grand Total: ${utils.formatCurrency(invoice.grandTotal)}</h3>
             </div>
             
             ${invoice.notes ? `<div style="margin-bottom: 20px;"><strong>Notes:</strong><br>${invoice.notes}</div>` : ''}
             
             <div style="text-align: center; margin-top: 40px; font-size: 0.9rem; color: #666;">
-                <p>Thank you for your business!</p>
+                <p>${customMessage}</p>
                 <p>Generated on ${utils.formatDateTime(new Date().toISOString())}</p>
             </div>
             
@@ -724,18 +731,22 @@ function completeScannerSale() {
         createdBy: auth.getCurrentUser().username
     };
     
-    // Update product stock
-    let stockUpdateFailed = false;
-    for (const item of invoice.items) {
-        if (!window.productsModule.updateProductStock(item.productId, item.quantity, 'subtract')) {
-            stockUpdateFailed = true;
-            utils.showNotification(`Insufficient stock for ${item.productName}`, 'error');
-            break;
+    // Update product stock and check for insufficient stock
+    for (const item of currentInvoice.items) {
+        const product = products.find(p => p.id === item.productId);
+        if (!product) {
+            utils.showNotification(`Product not found: ${item.productName}`, 'error');
+            return;
+        }
+        if (product.stock < item.quantity) {
+            utils.showNotification(`Insufficient stock for ${item.productName}. Available: ${product.stock}`, 'error');
+            return;
         }
     }
-    
-    if (stockUpdateFailed) {
-        return;
+
+    // If all stock checks pass, then proceed to update stock and save invoice
+    for (const item of currentInvoice.items) {
+        window.productsModule.updateProductStock(item.productId, item.quantity, 'subtract');
     }
     
     // Save invoice
@@ -791,7 +802,7 @@ function printScannerReceipt() {
             
             <div style="text-align: center; margin-top: 20px; font-size: 0.8rem;">
                 <p>Thank you for your purchase!</p>
-                <p>Please come again</p>
+                <p>${settings.customMessage || 'Please come again'}</p>
             </div>
         </div>
     `;
@@ -829,4 +840,38 @@ window.salesModule = {
     getSalesCount: () => invoices.length,
     getRecentInvoices: (limit = 5) => invoices.slice(-limit).reverse()
 };
+
+
+
+// Show receipt customization modal
+function showReceiptCustomizationModal() {
+    const settings = utils.getFromStorage("settings", {});
+    document.getElementById("shopName").value = settings.shopName || "";
+    document.getElementById("shopAddress").value = settings.shopAddress || "";
+    document.getElementById("shopPhone").value = settings.shopPhone || "";
+    document.getElementById("shopEmail").value = settings.shopEmail || "";
+    document.getElementById("customMessage").value = settings.customMessage || "";
+    utils.showModal("receiptCustomizationModal");
+}
+
+// Hide receipt customization modal
+function hideReceiptCustomizationModal() {
+    utils.hideModal("receiptCustomizationModal");
+}
+
+// Handle receipt customization form submission
+document.getElementById("receiptCustomizationForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const settings = {
+        shopName: document.getElementById("shopName").value,
+        shopAddress: document.getElementById("shopAddress").value,
+        shopPhone: document.getElementById("shopPhone").value,
+        shopEmail: document.getElementById("shopEmail").value,
+        customMessage: document.getElementById("customMessage").value
+    };
+    utils.saveToStorage("settings", settings);
+    utils.showNotification("Receipt settings saved successfully!", "success");
+    hideReceiptCustomizationModal();
+});
+
 

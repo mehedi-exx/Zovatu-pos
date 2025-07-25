@@ -24,13 +24,27 @@ function setupEventListeners() {
         }
     });
     
-    // Auto-generate barcode value
-    document.getElementById('productCode').addEventListener('input', function() {
-        if (this.value && !document.getElementById('barcodeValue').value) {
-            document.getElementById('barcodeValue').value = this.value;
-            generateBarcode();
+    // Auto-generate barcode value and type
+    document.getElementById("productCode").addEventListener("input", function() {
+        const productCode = this.value;
+        const barcodeValueInput = document.getElementById("barcodeValue");
+        const barcodeTypeSelect = document.getElementById("barcodeType");
+
+        if (productCode && !barcodeValueInput.value) {
+            barcodeValueInput.value = productCode;
         }
+        // Ensure a default barcode type is selected if none is
+        if (!barcodeTypeSelect.value) {
+            barcodeTypeSelect.value = "CODE128";
+        }
+        generateBarcode();
     });
+
+    // Generate barcode on barcodeType change
+    document.getElementById("barcodeType").addEventListener("change", generateBarcode);
+
+    // Generate barcode on barcodeValue input
+    document.getElementById("barcodeValue").addEventListener("input", generateBarcode);
 }
 
 // Load products from storage
@@ -67,12 +81,21 @@ function displayProducts(productsToShow = products) {
                 ` : 'N/A'}
             </td>
             <td class="actions">
-                <button onclick="editProduct('${product.id}')" class="btn-primary" style="padding: 5px 10px;">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button onclick="deleteProduct('${product.id}')" class="btn-danger" style="padding: 5px 10px;">
-                    <i class="fas fa-trash"></i>
-                </button>
+                ${user.role === 'admin' ? `
+                    <button onclick="editProduct('${product.id}')" class="btn-primary" style="padding: 5px 10px;">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deleteProduct('${product.id}')" class="btn-danger" style="padding: 5px 10px;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                ` : `
+                    <button class="btn-primary" style="padding: 5px 10px;" disabled title="Only admin can edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-danger" style="padding: 5px 10px;" disabled title="Only admin can delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `}
             </td>
         </tr>
     `).join('');
@@ -149,6 +172,12 @@ function filterProducts() {
 
 // Show add product modal
 function showAddProductModal() {
+    const user = auth.getCurrentUser();
+    if (user.role === 'salesman') {
+        utils.showNotification('Salesmen are not allowed to add products.', 'error');
+        return;
+    }
+
     editingProductId = null;
     document.getElementById('modalTitle').textContent = 'Add Product';
     document.getElementById('productForm').reset();
@@ -285,16 +314,14 @@ function generateBarcode() {
             margin: 10
         });
     } catch (error) {
-        barcodeElement.innerHTML = '<p style="color: #dc3545; text-align: center;">Invalid barcode value for selected type</p>';
-    }
-}
-
-// Show barcode modal
+        barcodeElement.innerHTML = '<p style="color: #dc3545; text-align: center;">Invalid barcode value for selected type</p>'// Show barcode modal
 function showBarcodeModal(productId) {
     const product = products.find(p => p.id === productId);
     if (!product || !product.barcodeValue) return;
     
-    const printBarcodePreview = document.getElementById('printBarcodePreview');
+    document.getElementById("barcodePrintModal").dataset.productId = productId; // Store product ID
+
+    const printBarcodePreview = document.getElementById("printBarcodePreview");
     printBarcodePreview.innerHTML = `
         <h4>${product.name}</h4>
         <svg id="printBarcode"></svg>
@@ -303,8 +330,8 @@ function showBarcodeModal(productId) {
     `;
     
     try {
-        JsBarcode('#printBarcode', product.barcodeValue, {
-            format: product.barcodeType || 'CODE128',
+        JsBarcode("#printBarcode", product.barcodeValue, {
+            format: product.barcodeType || "CODE128",
             width: 2,
             height: 100,
             displayValue: true,
@@ -312,32 +339,58 @@ function showBarcodeModal(productId) {
             margin: 10
         });
     } catch (error) {
-        printBarcodePreview.innerHTML = '<p style="color: #dc3545;">Error generating barcode</p>';
+        printBarcodePreview.innerHTML = 
+            `<p style="color: #dc3545;">Error generating barcode</p>`;
     }
     
-    utils.showModal('barcodePrintModal');
-}
-
-// Hide barcode modal
+    utils.showModal("barcodePrintModal");
+}// Hide barcode modal
 function hideBarcodeModal() {
-    utils.hideModal('barcodePrintModal');
-}
-
-// Print barcode
+    utils.hideModal('barcodePr// Print barcode
 function printBarcode() {
-    const quantity = parseInt(document.getElementById('printQuantity').value) || 1;
-    const printContent = document.getElementById('printBarcodePreview').innerHTML;
-    
-    let content = '<div style="display: flex; flex-wrap: wrap; gap: 20px;">';
-    for (let i = 0; i < quantity; i++) {
-        content += `<div style="border: 1px solid #ddd; padding: 10px; text-align: center;">${printContent}</div>`;
-    }
-    content += '</div>';
-    
-    utils.printContent(content, 'Barcode Print');
-}
+    const quantity = parseInt(document.getElementById("printQuantity").value) || 1;
+    const barcodePrintWidth = parseInt(document.getElementById("barcodePrintWidth").value) || 2;
+    const barcodePrintHeight = parseInt(document.getElementById("barcodePrintHeight").value) || 100;
 
-// Export products
+    const product = products.find(p => p.id === document.getElementById("barcodePrintModal").dataset.productId);
+    if (!product || !product.barcodeValue) return;
+
+    let content = 
+        `<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">`;
+    for (let i = 0; i < quantity; i++) {
+        // Create a temporary div to render the barcode for printing
+        const tempDiv = document.createElement("div");
+        tempDiv.style.border = "1px solid #ddd";
+        tempDiv.style.padding = "10px";
+        tempDiv.style.textAlign = "center";
+        tempDiv.innerHTML = `
+            <h4>${product.name}</h4>
+            <svg id="tempBarcode${i}"></svg>
+            <p><strong>Code:</strong> ${product.code}</p>
+            <p><strong>Price:</strong> ${utils.formatCurrency(product.price)}</p>
+        `;
+        document.body.appendChild(tempDiv); // Append to body to render SVG
+
+        try {
+            JsBarcode(`#tempBarcode${i}`, product.barcodeValue, {
+                format: product.barcodeType || "CODE128",
+                width: barcodePrintWidth,
+                height: barcodePrintHeight,
+                displayValue: true,
+                fontSize: 14,
+                margin: 10
+            });
+        } catch (error) {
+            tempDiv.innerHTML = 
+                `<p style="color: #dc3545;">Error generating barcode for print</p>`;
+        }
+        content += tempDiv.outerHTML;
+        tempDiv.remove(); // Remove temporary div
+    }
+    content += `</div>`;
+
+    utils.printContent(content, "Barcode Print");
+}port products
 function exportProducts() {
     if (products.length === 0) {
         utils.showNotification('No products to export', 'warning');

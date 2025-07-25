@@ -92,45 +92,6 @@ function showNotification(message, type = 'info') {
         </button>
     `;
     
-    // Add styles if not already added
-    if (!document.getElementById('notificationStyles')) {
-        const styles = document.createElement('style');
-        styles.id = 'notificationStyles';
-        styles.textContent = `
-            .notification {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: white;
-                border-left: 4px solid #007bff;
-                padding: 15px 20px;
-                border-radius: 5px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                z-index: 10000;
-                max-width: 400px;
-                animation: slideIn 0.3s ease;
-            }
-            .notification-success { border-left-color: #28a745; }
-            .notification-error { border-left-color: #dc3545; }
-            .notification-warning { border-left-color: #ffc107; }
-            .notification button {
-                background: none;
-                border: none;
-                cursor: pointer;
-                color: #666;
-                margin-left: auto;
-            }
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(styles);
-    }
-    
     // Add to page
     document.body.appendChild(notification);
     

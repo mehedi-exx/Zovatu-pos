@@ -50,6 +50,7 @@ function loadDashboardData() {
     dashboardData.totalCustomers = customers.length;
     dashboardData.totalInvoices = invoices.length;
     dashboardData.totalSales = invoices.reduce((sum, inv) => sum + inv.grandTotal, 0);
+    dashboardData.totalStockValue = products.reduce((sum, p) => sum + (p.stock * p.price), 0);
     
     // Get low stock products
     dashboardData.lowStockProducts = products.filter(p => p.stock <= 10 && p.stock > 0);
@@ -110,28 +111,41 @@ function getRecentActivities(invoices, products, customers) {
         .slice(0, 10);
 }
 
-// Prepare sales chart data
+// Prepare sales chart data and daily/monthly reports
 function prepareSalesChartData(invoices) {
-    const last7Days = [];
+    const salesByDay = {};
+    const salesByMonth = {};
     const today = new Date();
-    
-    // Generate last 7 days
+
+    invoices.forEach(inv => {
+        const invoiceDate = new Date(inv.date);
+        const dayString = invoiceDate.toISOString().split("T")[0];
+        const monthString = `${invoiceDate.getFullYear()}-${(invoiceDate.getMonth() + 1).toString().padStart(2, "0")}`;
+
+        salesByDay[dayString] = (salesByDay[dayString] || 0) + inv.grandTotal;
+        salesByMonth[monthString] = (salesByMonth[monthString] || 0) + inv.grandTotal;
+    });
+
+    const last7Days = [];
     for (let i = 6; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        const dateString = date.toISOString().split('T')[0];
-        
-        const dayInvoices = invoices.filter(inv => inv.date === dateString);
-        const dayTotal = dayInvoices.reduce((sum, inv) => sum + inv.grandTotal, 0);
-        
+        const dateString = date.toISOString().split("T")[0];
         last7Days.push({
             date: dateString,
-            label: date.toLocaleDateString('en-US', { weekday: 'short' }),
-            sales: dayTotal,
-            count: dayInvoices.length
+            label: date.toLocaleDateString("en-US", { weekday: "short" }),
+            sales: salesByDay[dateString] || 0,
         });
     }
-    
+
+    // Calculate daily sales for today
+    const todayString = today.toISOString().split("T")[0];
+    dashboardData.dailySales = salesByDay[todayString] || 0;
+
+    // Calculate monthly sales for current month
+    const currentMonthString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}`;
+    dashboardData.monthlySales = salesByMonth[currentMonthString] || 0;
+
     return last7Days;
 }
 
@@ -158,6 +172,13 @@ function displayStatsCards() {
             change: '+12%'
         },
         {
+            title: 'Total Stock Value',
+            value: utils.formatCurrency(dashboardData.totalStockValue),
+            icon: 'fas fa-boxes',
+            color: '#17a2b8',
+            change: '+0%'
+        },
+        {
             title: 'Total Invoices',
             value: dashboardData.totalInvoices.toString(),
             icon: 'fas fa-file-invoice',
@@ -165,11 +186,18 @@ function displayStatsCards() {
             change: '+8%'
         },
         {
-            title: 'Products',
-            value: dashboardData.totalProducts.toString(),
-            icon: 'fas fa-box',
-            color: '#6f42c1',
-            change: '+5%'
+            title: 'Daily Sales',
+            value: utils.formatCurrency(dashboardData.dailySales),
+            icon: 'fas fa-chart-line',
+            color: '#ffc107',
+            change: '+0%'
+        },
+        {
+            title: 'Monthly Sales',
+            value: utils.formatCurrency(dashboardData.monthlySales),
+            icon: 'fas fa-calendar-alt',
+            color: '#6c757d',
+            change: '+0%'
         },
         {
             title: 'Customers',
@@ -181,7 +209,9 @@ function displayStatsCards() {
     ];
     
     // Hide customer card for salesman if needed
-    const cardsToShow = user.role === 'salesman' ? cards : cards;
+    const cardsToShow = user.role === 'salesman' ? 
+        cards.filter(card => card.title === 'Total Sales' || card.title === 'Daily Sales' || card.title === 'Monthly Sales') : 
+        cards;
     
     statsContainer.innerHTML = cardsToShow.map(card => `
         <div class="card" style="background: linear-gradient(135deg, ${card.color}15, ${card.color}05); border-left: 4px solid ${card.color};">
