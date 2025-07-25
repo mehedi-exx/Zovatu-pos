@@ -13,96 +13,169 @@
 </head>
 <body>
     <div class="app-layout">
-        <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fas fa-cash-register"></i> Billing Pro</h2>
-            </div>
-            <div class="sidebar-nav">
-                <ul>
-                    <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="products.html"><i class="fas fa-box"></i> Products</a></li>
-                    <li><a href="customers.html"><i class="fas fa-users"></i> Customers</a></li>
-                    <li><a href="sales.html"><i class="fas fa-shopping-cart"></i> Sales</a></li>
-                    <li><a href="purchase.html" id="purchaseLink"><i class="fas fa-truck"></i> Purchase</a></li>
-                    <li><a href="quotation.html" id="quotationLink"><i class="fas fa-file-invoice"></i> Quotations</a></li>
-                    <li><a href="reports.html" id="reportsLink"><i class="fas fa-chart-bar"></i> Reports</a></li>
-                    <li><a href="settings.html" id="settingsLink"><i class="fas fa-cog"></i> Settings</a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Header Bar -->
-            <div class="header-bar">
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
+        <!-- Header Bar -->
+        <div class="header-bar">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="user-info">
+                <span id="userInfo">Loading...</span>
+                <button id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
-                <div class="user-info">
-                    <span id="userInfo">Loading...</span>
-                    <button id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
             </div>
+        </div>
 
-            <!-- Dashboard Content -->
-            <div class="page-header">
-                <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
-                <div>
-                    <button class="btn-primary" onclick="window.location.href='sales.html'">
-                        <i class="fas fa-plus"></i> Create Invoice
-                    </button>
-                </div>
-            </div>
+        <div class="main-content-wrapper">
+            <!-- Full-Screen Sidebar -->
+            <nav class="sidebar" id="sidebar">
+                <a href="javascript:void(0)" class="closebtn" id="closeSidebar">&times;</a>
+                <div style="padding: 40px; text-align: center;">
+                    <h1 style="color: white; margin-bottom: 40px;"><i class="fas fa-cash-register"></i> Billing Pro</h1>
+                    
+                    <!-- Main Navigation Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 50px;">
+                        
+                        <!-- Dashboard -->
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s;" onclick="window.location.href='dashboard.html'">
+                            <i class="fas fa-tachometer-alt" style="font-size: 3rem; color: white; margin-bottom: 15px;"></i>
+                            <h3 style="color: white; margin: 0;">Dashboard</h3>
+                            <p style="color: #f0f0f0; margin: 10px 0 0 0;">Overview & Analytics</p>
+                        </div>
 
-            <!-- Stats Cards -->
-            <div class="grid-responsive" id="statsCards">
-                <!-- Stats will be loaded here -->
-            </div>
+                        <!-- Products -->
+                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s;" onclick="window.location.href='products.html'">
+                            <i class="fas fa-box" style="font-size: 3rem; color: white; margin-bottom: 15px;"></i>
+                            <h3 style="color: white; margin: 0;">Products</h3>
+                            <p style="color: #f0f0f0; margin: 10px 0 0 0;">Manage Inventory</p>
+                        </div>
 
-            <!-- Charts and Recent Activities -->
-            <div class="grid-responsive">
-                <!-- Sales Chart -->
-                <div class="card">
-                    <h3><i class="fas fa-chart-line"></i> Sales Overview</h3>
-                    <canvas id="salesChart" width="400" height="200"></canvas>
-                </div>
+                        <!-- Customers -->
+                        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s;" onclick="window.location.href='customers.html'">
+                            <i class="fas fa-users" style="font-size: 3rem; color: white; margin-bottom: 15px;"></i>
+                            <h3 style="color: white; margin: 0;">Customers</h3>
+                            <p style="color: #f0f0f0; margin: 10px 0 0 0;">Client Management</p>
+                        </div>
 
-                <!-- Recent Activities -->
-                <div class="card">
-                    <h3><i class="fas fa-clock"></i> Recent Activities</h3>
-                    <div id="recentActivities">
-                        <!-- Recent activities will be loaded here -->
+                        <!-- Sales -->
+                        <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s;" onclick="window.location.href='sales.html'">
+                            <i class="fas fa-shopping-cart" style="font-size: 3rem; color: white; margin-bottom: 15px;"></i>
+                            <h3 style="color: white; margin: 0;">Sales</h3>
+                            <p style="color: #f0f0f0; margin: 10px 0 0 0;">Create Invoices</p>
+                        </div>
+
+                        <!-- Purchase -->
+                        <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s;" onclick="window.location.href='purchase.html'">
+                            <i class="fas fa-truck" style="font-size: 3rem; color: white; margin-bottom: 15px;"></i>
+                            <h3 style="color: white; margin: 0;">Purchase</h3>
+                            <p style="color: #f0f0f0; margin: 10px 0 0 0;">Supplier Orders</p>
+                        </div>
+
+                        <!-- Quotations -->
+                        <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s;" onclick="window.location.href='quotations.html'">
+                            <i class="fas fa-file-invoice" style="font-size: 3rem; color: #333; margin-bottom: 15px;"></i>
+                            <h3 style="color: #333; margin: 0;">Quotations</h3>
+                            <p style="color: #666; margin: 10px 0 0 0;">Price Estimates</p>
+                        </div>
+
+                        <!-- Reports -->
+                        <div style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s;" onclick="window.location.href='reports.html'">
+                            <i class="fas fa-chart-bar" style="font-size: 3rem; color: #333; margin-bottom: 15px;"></i>
+                            <h3 style="color: #333; margin: 0;">Reports</h3>
+                            <p style="color: #666; margin: 10px 0 0 0;">Analytics & Insights</p>
+                        </div>
+
+                        <!-- Settings -->
+                        <div style="background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s;" onclick="window.location.href='settings.html'">
+                            <i class="fas fa-cog" style="font-size: 3rem; color: #333; margin-bottom: 15px;"></i>
+                            <h3 style="color: #333; margin: 0;">Settings</h3>
+                            <p style="color: #666; margin: 10px 0 0 0;">Configuration</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Quick Actions Section -->
+                    <div style="margin-top: 60px;">
+                        <h2 style="color: white; margin-bottom: 30px;">Quick Actions</h2>
+                        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                            <button style="background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;" onclick="window.location.href='sales.html'">
+                                <i class="fas fa-plus"></i> New Invoice
+                            </button>
+                            <button style="background: #007bff; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;" onclick="window.location.href='products.html'">
+                                <i class="fas fa-box"></i> Add Product
+                            </button>
+                            <button style="background: #17a2b8; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;" onclick="window.location.href='customers.html'">
+                                <i class="fas fa-user-plus"></i> Add Customer
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </nav>
 
-            <!-- Quick Actions (for Salesman) -->
-            <div class="card" id="quickActions">
-                <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
-                <div class="grid-3">
-                    <button class="btn-primary" onclick="window.location.href='products.html'">
-                        <i class="fas fa-plus"></i> Add Product
-                    </button>
-                    <button class="btn-success" onclick="window.location.href='sales.html'">
-                        <i class="fas fa-shopping-cart"></i> Create Invoice
-                    </button>
-                    <button class="btn-secondary" onclick="window.location.href='customers.html'">
-                        <i class="fas fa-user-plus"></i> Add Customer
-                    </button>
+            <!-- Main Content -->
+            <main class="main-content" id="mainContent">
+                <!-- Dashboard Content -->
+                <div class="page-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                    <div>
+                        <button class="btn-primary" onclick="window.location.href='sales.html'">
+                            <i class="fas fa-plus"></i> Create Invoice
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Low Stock Alert (Admin only) -->
-            <div class="card" id="lowStockAlert" style="display: none;">
-                <h3><i class="fas fa-exclamation-triangle"></i> Low Stock Alert</h3>
-                <div id="lowStockItems">
-                    <!-- Low stock items will be loaded here -->
+                <!-- Stats Cards -->
+                <div class="grid-responsive" id="statsCards">
+                    <!-- Stats will be loaded here -->
                 </div>
-            </div>
-        </main>
+
+                <!-- Charts and Recent Activities -->
+                <div class="grid-responsive">
+                    <!-- Sales Chart -->
+                    <div class="card">
+                        <h3><i class="fas fa-chart-line"></i> Sales Overview</h3>
+                        <canvas id="salesChart" width="400" height="200"></canvas>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="card">
+                        <h3><i class="fas fa-clock"></i> Recent Activities</h3>
+                        <div id="recentActivities">
+                            <!-- Recent activities will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions (for Salesman) -->
+                <div class="card" id="quickActions">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <div class="grid-3">
+                        <button class="btn-primary" onclick="window.location.href='products.html'">
+                            <i class="fas fa-plus"></i> Add Product
+                        </button>
+                        <button class="btn-success" onclick="window.location.href='sales.html'">
+                            <i class="fas fa-shopping-cart"></i> Create Invoice
+                        </button>
+                        <button class="btn-secondary" onclick="window.location.href='customers.html'">
+                            <i class="fas fa-user-plus"></i> Add Customer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alert (Admin only) -->
+                <div class="card" id="lowStockAlert" style="display: none;">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Low Stock Alert</h3>
+                    <div id="lowStockItems">
+                        <!-- Low stock items will be loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer Bar -->
+        <div class="footer-bar">
+            <p>&copy; 2025 Billing Pro. All rights reserved.</p>
+        </div>
     </div>
 
     <script src="js/auth.js"></script>
