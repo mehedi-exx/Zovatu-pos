@@ -1,36 +1,51 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>বিল জেনারেটর</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="print.css" media="print" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>📦 বিল জেনারেটর</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="print.css" media="print">
 </head>
 <body>
-  <header>
+
+  <header class="header">
     <h1>📦 বিল জেনারেটর</h1>
     <p>বারকোড স্ক্যান করে প্রোডাক্ট সিলেক্ট করুন</p>
+    <a href="settings.html" class="settings-btn" title="Settings">⚙️</a>
   </header>
 
   <main>
-    <!-- স্ক্যান সেকশন -->
     <section>
       <h2>বারকোড স্ক্যান করুন</h2>
-      <input type="text" id="barcodeInput" placeholder="বারকোড স্ক্যান করুন বা লিখুন" autofocus />
+      <input type="text" id="barcodeInput" placeholder="বারকোড স্ক্যান করুন বা লিখুন">
     </section>
 
-    <!-- স্ক্যানকৃত পণ্য তালিকা -->
     <section>
       <h2>পণ্য তালিকা</h2>
-      <div id="productList"></div>
-      <h3>মোট: <span id="totalAmount">৳0</span></h3>
-      <button onclick="generateReceipt()">🧾 বিল প্রিন্ট</button>
+      <p>মোট: <span id="totalAmount">৳0</span></p>
+      <button id="printBillBtn">🧾 বিল প্রিন্ট</button>
+      <button id="addProductBtn">➕ পণ্য যোগ করুন</button>
+      <ul id="productList"></ul>
     </section>
-
-    <!-- প্রিন্ট রিসিভ -->
-    <section id="printSection" class="printable"></section>
   </main>
+
+  <!-- ➕ পণ্য যোগ করার মডাল -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h2>নতুন পণ্য যোগ করুন</h2>
+      <input type="text" id="newProductName" placeholder="পণ্যের নাম">
+      <input type="text" id="newProductBarcode" placeholder="বারকোড">
+      <input type="number" id="newProductPrice" placeholder="মূল্য">
+      <button id="saveProductBtn">✅ সংরক্ষণ করুন</button>
+    </div>
+  </div>
+
+  <!-- প্রিন্ট করার অংশ -->
+  <div id="printSection" class="printable" style="display: none;">
+    <div class="receipt" id="receiptContent"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
