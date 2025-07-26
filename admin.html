@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Zovatu Billing Tool</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer base {
+            html { font-family: 'Inter', sans-serif; }
+        }
+    </style>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Core Libraries CDN -->
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <!-- JSBarcode -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- FileSaver.js -->
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+
+</head>
+<body class="bg-gray-100 flex h-screen">
+    <!-- PIN Login Modal (Initially shown) -->
+    <div id="pinLoginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                    <i class="fas fa-shield-alt text-red-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900">Admin Access Required</h3>
+                <p class="text-sm text-gray-500 mt-2">Enter your admin PIN to access the admin panel</p>
+            </div>
+            
+            <form id="pinLoginForm">
+                <div class="mb-4">
+                    <label class="form-label">Admin PIN</label>
+                    <input type="password" id="adminPin" class="form-input text-center text-2xl tracking-widest" 
+                           placeholder="••••" maxlength="4" required>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <a href="index.html" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-unlock mr-2"></i> Access Admin
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-400">Default PIN: 1234</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-800 text-white flex flex-col" id="adminSidebar" style="display: none;">
+        <div class="p-4 text-2xl font-bold text-center border-b border-gray-700">
+            <i class="fas fa-shield-alt mr-2 text-red-400"></i>
+            Admin Panel
+        </div>
+        <nav class="flex-1 p-4">
+            <ul>
+                <li class="mb-2"><a href="index.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-tachometer-alt mr-2"></i> Dashboard</a></li>
+                <li class="mb-2"><a href="products.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-box mr-2"></i> Products</a></li>
+                <li class="mb-2"><a href="invoices.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-file-invoice mr-2"></i> Invoices</a></li>
+                <li class="mb-2"><a href="customers.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-users mr-2"></i> Customers</a></li>
+                <li class="mb-2"><a href="admin.html" class="block p-2 rounded bg-gray-700"><i class="fas fa-user-shield mr-2"></i> Admin</a></li>
+                <li class="mb-2"><a href="backup.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-save mr-2"></i> Backup</a></li>
+                <li class="mb-2"><a href="settings.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-cog mr-2"></i> Settings</a></li>
+                <li class="mb-2"><a href="reports.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-chart-line mr-2"></i> Reports</a></li>
+            </ul>
+        </nav>
+        <div class="p-4 border-t border-gray-700 text-center text-sm text-gray-400">
+            &copy; 2025 Zovatu. All rights reserved.
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden" id="adminMainContent" style="display: none;">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <h1 class="text-xl font-semibold text-gray-800">Admin Panel</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-600 user-name">Admin User</span>
+                <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onclick="adminManager.logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+            <div class="container mx-auto">
+                <!-- Admin Overview -->
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">System Administration</h2>
+                    <p class="text-gray-600">Manage system settings, data, and security</p>
+                </div>
+
+                <!-- System Statistics -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-database text-3xl text-blue-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Database Size</p>
+                                <p id="databaseSize" class="text-2xl font-semibold text-gray-900">0 KB</p>
+                                <p class="text-sm text-blue-600">Local Storage</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-clock text-3xl text-green-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">System Uptime</p>
+                                <p id="systemUptime" class="text-2xl font-semibold text-gray-900">0h 0m</p>
+                                <p class="text-sm text-green-600">Since last reload</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-shield-alt text-3xl text-purple-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Security Level</p>
+                                <p id="securityLevel" class="text-2xl font-semibold text-gray-900">High</p>
+                                <p class="text-sm text-purple-600">PIN Protected</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-sync-alt text-3xl text-orange-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Last Backup</p>
+                                <p id="lastBackup" class="text-2xl font-semibold text-gray-900">Never</p>
+                                <p class="text-sm text-orange-600">Auto backup off</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Data Management -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-database mr-2 text-blue-600"></i>
+                            Data Management
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-900">Export All Data</p>
+                                    <p class="text-sm text-gray-500">Download complete system backup</p>
+                                </div>
+                                <button id="exportAllBtn" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-download mr-1"></i> Export
+                                </button>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-900">Import Data</p>
+                                    <p class="text-sm text-gray-500">Restore from backup file</p>
+                                </div>
+                                <button id="importDataBtn" class="btn btn-success btn-sm">
+                                    <i class="fas fa-upload mr-1"></i> Import
+                                </button>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-900">Clear All Data</p>
+                                    <p class="text-sm text-gray-500">Reset system to factory defaults</p>
+                                </div>
+                                <button id="clearAllBtn" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash mr-1"></i> Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-shield-alt mr-2 text-purple-600"></i>
+                            Security Settings
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-900">Change Admin PIN</p>
+                                    <p class="text-sm text-gray-500">Update admin access PIN</p>
+                                </div>
+                                <button id="changePinBtn" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-key mr-1"></i> Change
+                                </button>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-900">Session Timeout</p>
+                                    <p class="text-sm text-gray-500">Auto logout after inactivity</p>
+                                </div>
+                                <select id="sessionTimeout" class="form-select text-sm">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30" selected>30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="0">Never</option>
+                                </select>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <p class="font-medium text-gray-900">Access Logs</p>
+                                    <p class="text-sm text-gray-500">View admin access history</p>
+                                </div>
+                                <button id="viewLogsBtn" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-history mr-1"></i> View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Information -->
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-info-circle mr-2 text-green-600"></i>
+                        System Information
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Application Version</p>
+                            <p class="text-lg font-semibold text-gray-900">Zovatu v2.0</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Browser</p>
+                            <p id="browserInfo" class="text-lg font-semibold text-gray-900">Loading...</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Screen Resolution</p>
+                            <p id="screenResolution" class="text-lg font-semibold text-gray-900">Loading...</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Local Storage Support</p>
+                            <p id="localStorageSupport" class="text-lg font-semibold text-gray-900">Loading...</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">PWA Support</p>
+                            <p id="pwaSupport" class="text-lg font-semibold text-gray-900">Loading...</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm font-medium text-gray-500">Installation Date</p>
+                            <p id="installationDate" class="text-lg font-semibold text-gray-900">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Overview -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-chart-pie mr-2 text-orange-600"></i>
+                        Data Overview
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data Type</th>
+                                    <th>Records</th>
+                                    <th>Size</th>
+                                    <th>Last Modified</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataOverviewBody">
+                                <!-- Data overview will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Change PIN Modal -->
+    <div id="changePinModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Admin PIN</h3>
+                <button class="modal-close" onclick="closeChangePinModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="changePinForm">
+                    <div class="form-group">
+                        <label class="form-label">Current PIN</label>
+                        <input type="password" id="currentPin" class="form-input text-center text-xl tracking-widest" 
+                               placeholder="••••" maxlength="4" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">New PIN</label>
+                        <input type="password" id="newPin" class="form-input text-center text-xl tracking-widest" 
+                               placeholder="••••" maxlength="4" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm New PIN</label>
+                        <input type="password" id="confirmPin" class="form-input text-center text-xl tracking-widest" 
+                               placeholder="••••" maxlength="4" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeChangePinModal()">Cancel</button>
+                <button type="submit" form="changePinForm" class="btn btn-primary">Change PIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Data Modal -->
+    <div id="importDataModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Import System Data</h3>
+                <button class="modal-close" onclick="closeImportDataModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <label class="form-label">Select Backup File</label>
+                    <input type="file" id="importFile" class="form-input" accept=".json">
+                </div>
+                <div class="alert alert-warning">
+                    <p><strong>Warning:</strong> Importing data will replace all existing data.</p>
+                    <p>Make sure to backup your current data before proceeding.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeImportDataModal()">Cancel</button>
+                <button type="button" id="confirmImportBtn" class="btn btn-danger">Import Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Logs Modal -->
+    <div id="accessLogsModal" class="modal">
+        <div class="modal-content max-w-4xl">
+            <div class="modal-header">
+                <h3 class="modal-title">Admin Access Logs</h3>
+                <button class="modal-close" onclick="closeAccessLogsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Action</th>
+                                <th>IP Address</th>
+                                <th>User Agent</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accessLogsBody">
+                            <!-- Access logs will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeAccessLogsModal()">Close</button>
+                <button type="button" id="clearLogsBtn" class="btn btn-danger">Clear Logs</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>
+

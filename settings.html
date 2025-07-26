@@ -3,317 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Billing Software</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Settings - Zovatu Billing Tool</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer base {
+            html { font-family: 'Inter', sans-serif; }
+        }
+    </style>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Core Libraries CDN -->
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <!-- JSBarcode -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- FileSaver.js -->
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+
 </head>
-<body>
-    <div class="app-layout">
-        <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fas fa-cash-register"></i> Billing Pro</h2>
-            </div>
-            <div class="sidebar-nav">
-                <ul>
-                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="products.html"><i class="fas fa-box"></i> Products</a></li>
-                    <li><a href="customers.html"><i class="fas fa-users"></i> Customers</a></li>
-                    <li><a href="sales.html"><i class="fas fa-shopping-cart"></i> Sales</a></li>
-                    <li><a href="purchase.html"><i class="fas fa-truck"></i> Purchase</a></li>
-                    <li><a href="quotation.html"><i class="fas fa-file-invoice"></i> Quotations</a></li>
-                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
-                    <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> Settings</a></li>
-                </ul>
-            </div>
+<body class="bg-gray-100 flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-800 text-white flex flex-col">
+        <div class="p-4 text-2xl font-bold text-center border-b border-gray-700">
+            Zovatu
+        </div>
+        <nav class="flex-1 p-4">
+            <ul>
+                <li class="mb-2"><a href="index.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-tachometer-alt mr-2"></i> Dashboard</a></li>
+                <li class="mb-2"><a href="products.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-box mr-2"></i> Products</a></li>
+                <li class="mb-2"><a href="invoices.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-file-invoice mr-2"></i> Invoices</a></li>
+                <li class="mb-2"><a href="customers.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-users mr-2"></i> Customers</a></li>
+                <li class="mb-2"><a href="admin.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-user-shield mr-2"></i> Admin</a></li>
+                <li class="mb-2"><a href="backup.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-save mr-2"></i> Backup</a></li>
+                <li class="mb-2"><a href="settings.html" class="block p-2 rounded bg-gray-700"><i class="fas fa-cog mr-2"></i> Settings</a></li>
+                <li class="mb-2"><a href="reports.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-chart-line mr-2"></i> Reports</a></li>
+            </ul>
         </nav>
+        <div class="p-4 border-t border-gray-700 text-center text-sm text-gray-400">
+            &copy; 2025 Zovatu. All rights reserved.
+        </div>
+    </aside>
 
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Header Bar -->
-            <div class="header-bar">
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="user-info">
-                    <span id="userInfo">Loading...</span>
-                    <button id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <h1 class="text-xl font-semibold text-gray-800">Settings</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-600 user-name">Admin User</span>
+                <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+            <div class="container mx-auto">
+                <!-- Settings Header -->
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">System Settings</h2>
+                    <p class="text-gray-600">Configure your billing system preferences and business information</p>
                 </div>
-            </div>
 
-            <!-- Settings Content -->
-            <div class="page-header">
-                <h2><i class="fas fa-cog"></i> Settings</h2>
-            </div>
-
-            <!-- Settings Tabs -->
-            <div class="card">
-                <div class="settings-tabs">
-                    <button class="tab-button active" onclick="showTab('shop')">
-                        <i class="fas fa-store"></i> Shop Information
-                    </button>
-                    <button class="tab-button" onclick="showTab('users')">
-                        <i class="fas fa-users-cog"></i> User Management
-                    </button>
-                    <button class="tab-button" onclick="showTab('backup')">
-                        <i class="fas fa-database"></i> Backup & Restore
-                    </button>
-                    <button class="tab-button" onclick="showTab('general')">
-                        <i class="fas fa-sliders-h"></i> General Settings
-                    </button>
-                </div>
-            </div>
-
-            <!-- Shop Information Tab -->
-            <div id="shopTab" class="settings-tab active">
-                <div class="card">
-                    <h3><i class="fas fa-store"></i> Shop Information</h3>
-                    <form id="shopForm">
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label for="shopName">Shop Name *</label>
-                                <input type="text" id="shopName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="shopPhone">Phone Number</label>
-                                <input type="tel" id="shopPhone">
-                            </div>
-                        </div>
-                        
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label for="shopEmail">Email Address</label>
-                                <input type="email" id="shopEmail">
-                            </div>
-                            <div class="form-group">
-                                <label for="shopWebsite">Website</label>
-                                <input type="url" id="shopWebsite">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="shopAddress">Address</label>
-                            <textarea id="shopAddress" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="grid-3">
-                            <div class="form-group">
-                                <label for="shopCity">City</label>
-                                <input type="text" id="shopCity">
-                            </div>
-                            <div class="form-group">
-                                <label for="shopState">State/Province</label>
-                                <input type="text" id="shopState">
-                            </div>
-                            <div class="form-group">
-                                <label for="shopZip">ZIP/Postal Code</label>
-                                <input type="text" id="shopZip">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="shopDescription">Business Description</label>
-                            <textarea id="shopDescription" rows="2" placeholder="Brief description of your business"></textarea>
-                        </div>
-                        
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn-primary">
-                                <i class="fas fa-save"></i> Save Shop Information
+                <!-- Settings Tabs -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex space-x-8 px-6" aria-label="Tabs">
+                            <button class="settings-tab active" data-tab="business">
+                                <i class="fas fa-building mr-2"></i>
+                                Business Info
                             </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+                            <button class="settings-tab" data-tab="invoice">
+                                <i class="fas fa-file-invoice mr-2"></i>
+                                Invoice Settings
+                            </button>
+                            <button class="settings-tab" data-tab="printing">
+                                <i class="fas fa-print mr-2"></i>
+                                Printing
+                            </button>
+                            <button class="settings-tab" data-tab="notifications">
+                                <i class="fas fa-bell mr-2"></i>
+                                Notifications
+                            </button>
+                            <button class="settings-tab" data-tab="system">
+                                <i class="fas fa-cogs mr-2"></i>
+                                System
+                            </button>
+                        </nav>
+                    </div>
 
-            <!-- User Management Tab -->
-            <div id="usersTab" class="settings-tab">
-                <div class="card">
-                    <div class="page-header">
-                        <h3><i class="fas fa-users-cog"></i> User Management</h3>
-                        <button class="btn-primary" onclick="showAddUserModal()">
-                            <i class="fas fa-plus"></i> Add User
+                    <!-- Business Information Tab -->
+                    <div id="businessTab" class="settings-content active">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Business Information</h3>
+                            <form id="businessForm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Business Name *</label>
+                                        <input type="text" id="businessName" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Business Type</label>
+                                        <select id="businessType" class="form-select">
+                                            <option value="retail">Retail</option>
+                                            <option value="wholesale">Wholesale</option>
+                                            <option value="service">Service</option>
+                                            <option value="restaurant">Restaurant</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Phone Number</label>
+                                        <input type="tel" id="businessPhone" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" id="businessEmail" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Website</label>
+                                        <input type="url" id="businessWebsite" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Tax ID / Registration Number</label>
+                                        <input type="text" id="businessTaxId" class="form-input">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Business Address</label>
+                                    <textarea id="businessAddress" class="form-textarea" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Business Logo URL</label>
+                                    <input type="url" id="businessLogo" class="form-input" placeholder="https://example.com/logo.png">
+                                    <p class="text-sm text-gray-500 mt-1">Enter a URL to your business logo image</p>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="btn btn-primary">Save Business Info</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Settings Tab -->
+                    <div id="invoiceTab" class="settings-content">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Invoice Settings</h3>
+                            <form id="invoiceForm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Invoice Prefix</label>
+                                        <input type="text" id="invoicePrefix" class="form-input" placeholder="INV">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Starting Invoice Number</label>
+                                        <input type="number" id="invoiceStartNumber" class="form-input" min="1" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Default Currency</label>
+                                        <select id="defaultCurrency" class="form-select">
+                                            <option value="USD">USD ($)</option>
+                                            <option value="EUR">EUR (€)</option>
+                                            <option value="GBP">GBP (£)</option>
+                                            <option value="BDT">BDT (৳)</option>
+                                            <option value="INR">INR (₹)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Default Tax Rate (%)</label>
+                                        <input type="number" id="defaultTaxRate" class="form-input" min="0" max="100" step="0.01">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Payment Terms (Days)</label>
+                                        <input type="number" id="paymentTerms" class="form-input" min="0" value="30">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Invoice Template</label>
+                                        <select id="invoiceTemplate" class="form-select">
+                                            <option value="modern">Modern</option>
+                                            <option value="classic">Classic</option>
+                                            <option value="minimal">Minimal</option>
+                                            <option value="professional">Professional</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Invoice Footer Text</label>
+                                    <textarea id="invoiceFooter" class="form-textarea" rows="3" 
+                                              placeholder="Thank you for your business!"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Terms and Conditions</label>
+                                    <textarea id="termsConditions" class="form-textarea" rows="4" 
+                                              placeholder="Enter your terms and conditions..."></textarea>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="btn btn-primary">Save Invoice Settings</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Printing Settings Tab -->
+                    <div id="printingTab" class="settings-content">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Printing Settings</h3>
+                            <form id="printingForm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Default Print Size</label>
+                                        <select id="defaultPrintSize" class="form-select">
+                                            <option value="A4">A4 (210 × 297 mm)</option>
+                                            <option value="80mm">80mm Thermal</option>
+                                            <option value="58mm">58mm Thermal</option>
+                                            <option value="letter">Letter (8.5 × 11 in)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Print Orientation</label>
+                                        <select id="printOrientation" class="form-select">
+                                            <option value="portrait">Portrait</option>
+                                            <option value="landscape">Landscape</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Auto Print After Save</label>
+                                        <select id="autoPrint" class="form-select">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Print Copies</label>
+                                        <input type="number" id="printCopies" class="form-input" min="1" max="10" value="1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Receipt Header Text</label>
+                                    <textarea id="receiptHeader" class="form-textarea" rows="2" 
+                                              placeholder="Welcome to our store!"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Receipt Footer Text</label>
+                                    <textarea id="receiptFooter" class="form-textarea" rows="2" 
+                                              placeholder="Thank you for shopping with us!"></textarea>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="submit" class="btn btn-primary">Save Printing Settings</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Notifications Tab -->
+                    <div id="notificationsTab" class="settings-content">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Notification Settings</h3>
+                            <form id="notificationsForm">
+                                <div class="space-y-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Low Stock Alert Threshold</label>
+                                        <input type="number" id="lowStockThreshold" class="form-input" min="0" value="10">
+                                        <p class="text-sm text-gray-500 mt-1">Alert when product stock falls below this number</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Due Payment Reminder (Days)</label>
+                                        <input type="number" id="dueReminderDays" class="form-input" min="0" value="3">
+                                        <p class="text-sm text-gray-500 mt-1">Send reminder this many days before payment due date</p>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <h4 class="text-md font-medium text-gray-800">Enable Notifications</h4>
+                                        
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Low Stock Alerts</p>
+                                                <p class="text-sm text-gray-500">Get notified when products are running low</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="enableLowStockAlerts" checked>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Due Payment Alerts</p>
+                                                <p class="text-sm text-gray-500">Get notified about upcoming due payments</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="enableDuePaymentAlerts" checked>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Daily Sales Summary</p>
+                                                <p class="text-sm text-gray-500">Get daily sales summary notifications</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="enableDailySummary">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Sound Notifications</p>
+                                                <p class="text-sm text-gray-500">Play sound for important notifications</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="enableSoundNotifications">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-end mt-6">
+                                    <button type="submit" class="btn btn-primary">Save Notification Settings</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- System Settings Tab -->
+                    <div id="systemTab" class="settings-content">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">System Settings</h3>
+                            <form id="systemForm">
+                                <div class="space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Date Format</label>
+                                            <select id="dateFormat" class="form-select">
+                                                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                                <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Time Format</label>
+                                            <select id="timeFormat" class="form-select">
+                                                <option value="12">12 Hour (AM/PM)</option>
+                                                <option value="24">24 Hour</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Language</label>
+                                            <select id="systemLanguage" class="form-select">
+                                                <option value="en">English</option>
+                                                <option value="es">Spanish</option>
+                                                <option value="fr">French</option>
+                                                <option value="de">German</option>
+                                                <option value="bn">Bengali</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Theme</label>
+                                            <select id="systemTheme" class="form-select">
+                                                <option value="light">Light</option>
+                                                <option value="dark">Dark</option>
+                                                <option value="auto">Auto (System)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <h4 class="text-md font-medium text-gray-800">System Preferences</h4>
+                                        
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Auto Save</p>
+                                                <p class="text-sm text-gray-500">Automatically save changes as you type</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="enableAutoSave" checked>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Auto Backup</p>
+                                                <p class="text-sm text-gray-500">Automatically backup data daily</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="enableAutoBackup">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Compact Mode</p>
+                                                <p class="text-sm text-gray-500">Use compact layout to show more data</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="enableCompactMode">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Developer Mode</p>
+                                                <p class="text-sm text-gray-500">Enable advanced features and debugging</p>
+                                            </div>
+                                            <label class="switch">
+                                                <input type="checkbox" id="enableDeveloperMode">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Data Retention Period (Days)</label>
+                                        <input type="number" id="dataRetentionDays" class="form-input" min="30" value="365">
+                                        <p class="text-sm text-gray-500 mt-1">How long to keep deleted records in trash</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-end mt-6">
+                                    <button type="submit" class="btn btn-primary">Save System Settings</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reset Settings -->
+                <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 text-red-600">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Danger Zone
+                    </h3>
+                    <div class="flex justify-between items-center p-4 bg-red-50 rounded-lg border border-red-200">
+                        <div>
+                            <p class="font-medium text-gray-900">Reset All Settings</p>
+                            <p class="text-sm text-gray-500">This will reset all settings to their default values</p>
+                        </div>
+                        <button id="resetSettingsBtn" class="btn btn-danger">
+                            <i class="fas fa-undo mr-2"></i>
+                            Reset Settings
                         </button>
                     </div>
-                    
-                    <table id="usersTable">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Role</th>
-                                <th>Created</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTableBody">
-                            <!-- Users will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Change Password Section -->
-                <div class="card">
-                    <h3><i class="fas fa-key"></i> Change Password</h3>
-                    <form id="passwordForm">
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label for="currentPassword">Current Password *</label>
-                                <input type="password" id="currentPassword" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="newPassword">New Password *</label>
-                                <input type="password" id="newPassword" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="confirmPassword">Confirm New Password *</label>
-                            <input type="password" id="confirmPassword" required>
-                        </div>
-                        
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn-primary">
-                                <i class="fas fa-key"></i> Change Password
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Backup & Restore Tab -->
-            <div id="backupTab" class="settings-tab">
-                <div class="card">
-                    <h3><i class="fas fa-database"></i> Data Backup & Restore</h3>
-                    
-                    <!-- Backup Section -->
-                    <div style="margin-bottom: 30px;">
-                        <h4><i class="fas fa-download"></i> Create Backup</h4>
-                        <p>Download a complete backup of all your data including products, customers, invoices, and settings.</p>
-                        <button onclick="utils.createBackup()" class="btn-primary">
-                            <i class="fas fa-download"></i> Download Backup
-                        </button>
-                    </div>
-                    
-                    <!-- Restore Section -->
-                    <div style="margin-bottom: 30px;">
-                        <h4><i class="fas fa-upload"></i> Restore from Backup</h4>
-                        <p style="color: #dc3545;"><strong>Warning:</strong> This will replace all current data with the backup data.</p>
-                        <div class="form-group">
-                            <input type="file" id="backupFile" accept=".json" onchange="handleBackupRestore(this)">
-                        </div>
-                    </div>
-                    
-                    <!-- Auto Backup Status -->
-                    <div>
-                        <h4><i class="fas fa-clock"></i> Auto Backup Status</h4>
-                        <p>Last backup: <span id="lastBackupTime">Never</span></p>
-                        <p style="color: #28a745;">✓ Daily auto-backup is enabled</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- General Settings Tab -->
-            <div id="generalTab" class="settings-tab">
-                <div class="card">
-                    <h3><i class="fas fa-sliders-h"></i> General Settings</h3>
-                    <form id="generalForm">
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label for="currency">Currency</label>
-                                <select id="currency">
-                                    <option value="USD">USD ($)</option>
-                                    <option value="EUR">EUR (€)</option>
-                                    <option value="GBP">GBP (£)</option>
-                                    <option value="BDT">BDT (৳)</option>
-                                    <option value="INR">INR (₹)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="dateFormat">Date Format</label>
-                                <select id="dateFormat">
-                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label for="defaultTax">Default Tax Rate (%)</label>
-                                <input type="number" id="defaultTax" min="0" max="100" step="0.01" value="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="lowStockThreshold">Low Stock Threshold</label>
-                                <input type="number" id="lowStockThreshold" min="1" value="10">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="enableNotifications"> Enable Notifications
-                            </label>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="enableAutoBackup" checked> Enable Daily Auto Backup
-                            </label>
-                        </div>
-                        
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn-primary">
-                                <i class="fas fa-save"></i> Save General Settings
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Add User Modal -->
-    <div id="addUserModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New User</h3>
-                <span class="close" onclick="hideAddUserModal()">&times;</span>
-            </div>
-            <form id="addUserForm">
-                <div class="form-group">
-                    <label for="newUsername">Username *</label>
-                    <input type="text" id="newUsername" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="newUserPassword">Password *</label>
-                    <input type="password" id="newUserPassword" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="newUserRole">Role *</label>
-                    <select id="newUserRole" required>
-                        <option value="salesman">Salesman</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                
-                <div class="form-group text-center">
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-plus"></i> Add User
-                    </button>
-                    <button type="button" onclick="hideAddUserModal()" class="btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="js/auth.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/settings.js"></script>
+    <!-- Main JavaScript -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/settings.js"></script>
 </body>
 </html>
 

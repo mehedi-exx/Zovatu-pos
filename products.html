@@ -3,231 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - Billing Software</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Products - Zovatu Billing Tool</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer base {
+            html { font-family: 'Inter', sans-serif; }
+        }
+    </style>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Core Libraries CDN -->
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <!-- JSBarcode -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- FileSaver.js -->
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+    <!-- QuaggaJS for barcode scanning -->
+    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+
 </head>
-<body>
-    <div class="app-layout">
-        <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fas fa-cash-register"></i> Billing Pro</h2>
-            </div>
-            <div class="sidebar-nav">
-                <ul>
-                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="products.html" class="active"><i class="fas fa-box"></i> Products</a></li>
-                    <li><a href="customers.html"><i class="fas fa-users"></i> Customers</a></li>
-                    <li><a href="sales.html"><i class="fas fa-shopping-cart"></i> Sales</a></li>
-                    <li><a href="purchase.html" id="purchaseLink"><i class="fas fa-truck"></i> Purchase</a></li>
-                    <li><a href="quotation.html" id="quotationLink"><i class="fas fa-file-invoice"></i> Quotations</a></li>
-                    <li><a href="reports.html" id="reportsLink"><i class="fas fa-chart-bar"></i> Reports</a></li>
-                    <li><a href="settings.html" id="settingsLink"><i class="fas fa-cog"></i> Settings</a></li>
-                </ul>
-            </div>
+<body class="bg-gray-100 flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-800 text-white flex flex-col">
+        <div class="p-4 text-2xl font-bold text-center border-b border-gray-700">
+            Zovatu
+        </div>
+        <nav class="flex-1 p-4">
+            <ul>
+                <li class="mb-2"><a href="index.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-tachometer-alt mr-2"></i> Dashboard</a></li>
+                <li class="mb-2"><a href="products.html" class="block p-2 rounded bg-gray-700"><i class="fas fa-box mr-2"></i> Products</a></li>
+                <li class="mb-2"><a href="invoices.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-file-invoice mr-2"></i> Invoices</a></li>
+                <li class="mb-2"><a href="customers.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-users mr-2"></i> Customers</a></li>
+                <li class="mb-2"><a href="admin.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-user-shield mr-2"></i> Admin</a></li>
+                <li class="mb-2"><a href="backup.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-save mr-2"></i> Backup</a></li>
+                <li class="mb-2"><a href="settings.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-cog mr-2"></i> Settings</a></li>
+                <li class="mb-2"><a href="reports.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-chart-line mr-2"></i> Reports</a></li>
+            </ul>
         </nav>
+        <div class="p-4 border-t border-gray-700 text-center text-sm text-gray-400">
+            &copy; 2025 Zovatu. All rights reserved.
+        </div>
+    </aside>
 
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Header Bar -->
-            <div class="header-bar">
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="user-info">
-                    <span id="userInfo">Loading...</span>
-                    <button id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <h1 class="text-xl font-semibold text-gray-800">Product Management</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-600 user-name">Admin User</span>
+                <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 logout-btn">Logout</button>
             </div>
+        </header>
 
-            <!-- Products Content -->
-            <div class="page-header">
-                <h2><i class="fas fa-box"></i> Products Management</h2>
-                <div>
-                    <button class="btn-primary" onclick="showAddProductModal()">
-                        <i class="fas fa-plus"></i> Add Product
-                    </button>
-                    <button class="btn-secondary" onclick="exportProducts()">
-                        <i class="fas fa-download"></i> Export
-                    </button>
-                </div>
-            </div>
-
-            <!-- Search and Filter -->
-            <div class="card">
-                <div class="grid-responsive">
-                    <div class="form-group">
-                        <input type="text" id="searchProducts" placeholder="Search products..." onkeyup="searchProducts()">
+        <!-- Page Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+            <div class="container mx-auto">
+                <!-- Action Bar -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Products</h2>
+                        <p class="text-gray-600">Manage your product inventory</p>
                     </div>
-                    <div class="form-group">
-                        <select id="categoryFilter" onchange="filterProducts()">
-                            <option value="">All Categories</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select id="stockFilter" onchange="filterProducts()">
-                            <option value="">All Stock Levels</option>
-                            <option value="in-stock">In Stock</option>
-                            <option value="low-stock">Low Stock</option>
-                            <option value="out-of-stock">Out of Stock</option>
-                        </select>
+                    <div class="flex flex-wrap gap-2">
+                        <button id="addProductBtn" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i> Add Product
+                        </button>
+                        <button id="scanBarcodeBtn" class="btn btn-secondary">
+                            <i class="fas fa-qrcode mr-2"></i> Scan Barcode
+                        </button>
+                        <button id="importProductsBtn" class="btn btn-success">
+                            <i class="fas fa-upload mr-2"></i> Import
+                        </button>
+                        <button id="exportProductsBtn" class="btn btn-warning">
+                            <i class="fas fa-download mr-2"></i> Export
+                        </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Products Table -->
-            <div class="card">
-                <table id="productsTable">
-                    <thead>
-                        <tr>
-                            <th>Product Code</th>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Barcode</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsTableBody">
-                        <!-- Products will be loaded here -->
-                    </tbody>
-                </table>
+                <!-- Statistics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-box text-2xl text-blue-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-500">Total Products</p>
+                                <p id="totalProducts" class="text-2xl font-semibold text-gray-900">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-dollar-sign text-2xl text-green-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-500">Total Value</p>
+                                <p id="totalValue" class="text-2xl font-semibold text-gray-900">$0.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-2xl text-orange-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-500">Low Stock</p>
+                                <p id="lowStockCount" class="text-2xl font-semibold text-gray-900">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-calendar-times text-2xl text-red-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-500">Expired</p>
+                                <p id="expiredCount" class="text-2xl font-semibold text-gray-900">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters and Search -->
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="form-label">Search Products</label>
+                            <input type="text" id="searchInput" class="form-input" placeholder="Search by name, code, or category...">
+                        </div>
+                        <div>
+                            <label class="form-label">Category</label>
+                            <select id="categoryFilter" class="form-select">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Stock Status</label>
+                            <select id="stockFilter" class="form-select">
+                                <option value="">All Stock</option>
+                                <option value="in-stock">In Stock</option>
+                                <option value="low-stock">Low Stock</option>
+                                <option value="out-of-stock">Out of Stock</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Sort By</label>
+                            <select id="sortBy" class="form-select">
+                                <option value="name">Name</option>
+                                <option value="code">Code</option>
+                                <option value="price">Price</option>
+                                <option value="stock">Stock</option>
+                                <option value="created">Date Added</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product</th>
+                                    <th>Code</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <tr>
+                                    <td colspan="8" class="text-center py-8 text-gray-500">
+                                        <i class="fas fa-box text-4xl mb-2"></i>
+                                        <p>No products found. Add your first product to get started.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="flex justify-center mt-6">
+                    <!-- Pagination will be generated by JavaScript -->
+                </div>
             </div>
         </main>
     </div>
 
     <!-- Add/Edit Product Modal -->
     <div id="productModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content max-w-2xl">
             <div class="modal-header">
-                <h3 id="modalTitle">Add Product</h3>
-                <span class="close" onclick="hideProductModal()">&times;</span>
+                <h3 class="modal-title">Add Product</h3>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
             </div>
-            <form id="productForm">
-                <div class="grid-responsive">
-                    <div class="form-group">
-                        <label for="productCode">Product Code *</label>
-                        <input type="text" id="productCode" required>
+            <div class="modal-body">
+                <form id="productForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Product Name *</label>
+                            <input type="text" id="productName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Product Code</label>
+                            <input type="text" id="productCode" class="form-input" placeholder="Auto-generated if empty">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <input type="text" id="productCategory" class="form-input" list="categoryList">
+                            <datalist id="categoryList">
+                                <!-- Categories will be populated by JavaScript -->
+                            </datalist>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Unit</label>
+                            <select id="productUnit" class="form-select">
+                                <option value="pcs">Pieces</option>
+                                <option value="kg">Kilogram</option>
+                                <option value="ltr">Liter</option>
+                                <option value="box">Box</option>
+                                <option value="pack">Pack</option>
+                                <option value="meter">Meter</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Selling Price *</label>
+                            <input type="number" id="productPrice" class="form-input" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cost Price</label>
+                            <input type="number" id="productCost" class="form-input" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stock Quantity *</label>
+                            <input type="number" id="productStock" class="form-input" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Low Stock Alert</label>
+                            <input type="number" id="productLowStock" class="form-input" min="0" value="10">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Expiry Date</label>
+                            <input type="date" id="productExpiry" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Product Image</label>
+                            <input type="file" id="productImage" class="form-input" accept="image/*">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="productName">Product Name *</label>
-                        <input type="text" id="productName" required>
+                        <label class="form-label">Description</label>
+                        <textarea id="productDescription" class="form-textarea" rows="3"></textarea>
                     </div>
-                </div>
-                
-                <div class="grid-responsive">
+                    
+                    <!-- Barcode Section -->
                     <div class="form-group">
-                        <label for="productCategory">Category</label>
-                        <input type="text" id="productCategory" placeholder="e.g., Electronics, Clothing">
+                        <label class="form-label">Barcode</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="productBarcode" class="form-input" placeholder="Barcode will be generated automatically">
+                            <button type="button" id="generateBarcodeBtn" class="btn btn-secondary">
+                                <i class="fas fa-barcode mr-1"></i> Generate
+                            </button>
+                        </div>
+                        <div id="barcodePreview" class="mt-2 text-center">
+                            <!-- Barcode will be displayed here -->
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="productPrice">Price *</label>
-                        <input type="number" id="productPrice" step="0.01" min="0" required>
-                    </div>
-                </div>
-                
-                <div class="grid-responsive">
-                    <div class="form-group">
-                        <label for="productStock">Stock Quantity</label>
-                        <input type="number" id="productStock" min="0" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="productUnit">Unit</label>
-                        <input type="text" id="productUnit" placeholder="e.g., pcs, kg, ltr">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="productDescription">Description</label>
-                    <textarea id="productDescription" rows="3"></textarea>
-                </div>
-                
-                <!-- Barcode Section -->
-                <div class="form-group">
-                    <label for="barcodeType">Barcode Type</label>
-                    <select id="barcodeType" onchange="generateBarcode()">
-                        <option value="CODE128">CODE128 (Recommended)</option>
-                        <option value="CODE39">CODE39</option>
-                        <option value="EAN13">EAN13</option>
-                        <option value="EAN8">EAN8</option>
-                        <option value="UPC">UPC</option>
-                        <option value="ITF14">ITF14</option>
-                        <option value="MSI">MSI</option>
-                        <option value="pharmacode">Pharmacode</option>
-                        <option value="codabar">Codabar</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="barcodeValue">Barcode Value</label>
-                    <input type="text" id="barcodeValue" placeholder="Auto-generated or enter custom">
-                    <button type="button" onclick="generateBarcode()" class="btn-secondary mt-20">
-                        <i class="fas fa-sync"></i> Generate Barcode
-                    </button>
-                </div>
-                
-                <!-- Barcode Preview -->
-                <div class="form-group">
-                    <label>Barcode Preview</label>
-                    <div id="barcodePreview" class="text-center" style="border: 1px solid #ddd; padding: 20px; margin-top: 10px;">
-                        <svg id="barcode"></svg>
-                    </div>
-                </div>
-                
-                <div class="form-group text-center">
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-save"></i> Save Product
-                    </button>
-                    <button type="button" onclick="hideProductModal()" class="btn-secondary">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Barcode Print Modal -->
-    <div id="barcodePrintModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Print Barcode</h3>
-                <span class="close" onclick="hideBarcodeModal()">&times;</span>
+                </form>
             </div>
-            <div class="text-center">
-                <div id="printBarcodePreview" style="border: 1px solid #ddd; padding: 20px; margin: 20px 0;">
-                    <!-- Barcode will be displayed here -->
-                </div>
-                <div class="form-group">
-                    <label for="printQuantity">Print Quantity</label>
-                    <input type="number" id="printQuantity" value="1" min="1" max="100">
-                </div>
-                <div class="form-group">
-                    <label for="barcodePrintWidth">Barcode Width (px)</label>
-                    <input type="number" id="barcodePrintWidth" value="2" min="1">
-                </div>
-                <div class="form-group">
-                    <label for="barcodePrintHeight">Barcode Height (px)</label>
-                    <input type="number" id="barcodePrintHeight" value="100" min="1">
-                </div>
-                <button onclick="printBarcode()" class="btn-primary">
-                    <i class="fas fa-print"></i> Print
-                </button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
+                <button type="submit" form="productForm" class="btn btn-primary">Save Product</button>
             </div>
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/menu.js"></script>
+    <!-- Barcode Scanner Modal -->
+    <div id="scannerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Scan Barcode</h3>
+                <button class="modal-close" onclick="closeScannerModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="scanner" class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <p class="text-gray-500">Camera will appear here</p>
+                </div>
+                <div id="scanResult" class="mt-4 hidden">
+                    <div class="alert alert-success">
+                        <strong>Barcode detected:</strong> <span id="scannedCode"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeScannerModal()">Close</button>
+                <button type="button" id="useScanResultBtn" class="btn btn-primary hidden">Use This Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Products Modal -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Import Products</h3>
+                <button class="modal-close" onclick="closeImportModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <label class="form-label">Select JSON File</label>
+                    <input type="file" id="importFile" class="form-input" accept=".json">
+                </div>
+                <div class="alert alert-info">
+                    <p><strong>File Format:</strong> Upload a JSON file with product data.</p>
+                    <p><strong>Sample format:</strong></p>
+                    <pre class="text-xs mt-2 bg-gray-100 p-2 rounded">
+[
+  {
+    "name": "Product Name",
+    "code": "PROD001",
+    "category": "Category",
+    "price": 10.99,
+    "cost": 5.50,
+    "stock": 100,
+    "unit": "pcs"
+  }
+]</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeImportModal()">Cancel</button>
+                <button type="button" id="importBtn" class="btn btn-primary">Import Products</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="hiddenFileInput" style="display: none;" accept=".json">
+
+    <!-- Main JavaScript -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/products.js"></script>
 </body>
 </html>
 

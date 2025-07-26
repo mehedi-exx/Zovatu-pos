@@ -1,276 +1,377 @@
-# Professional Billing Software
+# Zovatu Billing Tool
 
-A comprehensive, multi-user billing software designed to run on localhost with advanced features including role-based access control, barcode scanning, flexible printing, and complete business management capabilities.
+A comprehensive, modern, and responsive billing software built with HTML, CSS, and JavaScript. Perfect for small to medium businesses looking for a professional billing solution that works offline and can be deployed on GitHub Pages.
 
 ## 🚀 Features
 
-### 👥 **Multi-User System**
-- **Admin Role**: Full access to all features including user management, settings, reports
-- **Salesman Role**: Limited access to product management and sales operations
-- Secure login with role-based access control
+### 📊 Dashboard Analytics
+- Real-time business statistics with percentage changes
+- Interactive charts (Sales Trend, Top Products, Revenue vs Profit)
+- Quick actions for common tasks
+- Recent activity monitoring
+- Low stock alerts and due payment tracking
 
-### 📦 **Product Management**
-- Add, edit, and delete products
-- Automatic barcode generation with multiple format support (CODE128, CODE39, EAN13, etc.)
-- Stock management with low stock alerts
-- Category-based organization
-- Product search and filtering
+### 📦 Product Management
+- Complete CRUD operations for products
+- Automatic barcode generation (multiple formats)
+- Webcam barcode scanning for quick product lookup
+- Category management and filtering
+- Stock tracking with low stock alerts
+- Bulk import/export functionality
+- Professional product catalog with images
 
-### 🛒 **Sales & Invoicing**
-- Create professional invoices with multiple products
-- Product search with barcode scanning support
-- Per-item and overall discount options
-- Tax calculations
-- Walk-in customer support
-- Scanner-based quick billing
+### 🧾 Invoice Generation
+- Multi-product invoice creation
+- Real-time barcode scanning for quick product addition
+- Multiple payment methods support
+- Automatic calculations (subtotal, discount, tax, total)
+- Professional receipt printing (A4, 80mm, 58mm formats)
+- Invoice history and management
+- Quick sale mode for fast transactions
 
-### 👤 **Customer Management**
+### 👥 Customer Management
 - Complete customer database
-- Purchase history tracking
-- Customer types (Regular, Wholesale, Retail)
-- Contact information management
+- Due tracking and payment history
+- Customer statements generation
+- Credit limit management
+- Overdue detection and reminders
+- Customer activity tracking
 
-### 📊 **Dashboard & Analytics**
-- Real-time sales overview
-- Key performance metrics
-- Recent activities tracking
-- Low stock alerts
-- Interactive charts and graphs
+### 📈 Advanced Reporting
+- Comprehensive business analytics
+- Sales reports with date filtering
+- Top products and customers analysis
+- Financial summary with profit/loss calculations
+- Inventory reports with stock analysis
+- Interactive charts and visualizations
+- Export capabilities (JSON, PDF, Excel)
 
-### 🖨️ **Flexible Printing**
-- Multiple print formats (A4, A5, Receipt)
-- Professional invoice templates
-- Customizable shop information
-- Print-ready layouts
+### ⚙️ Admin Panel & Settings
+- PIN-based admin authentication
+- Comprehensive system configuration
+- Business information management
+- Print settings customization
+- Security and session management
+- Data backup and restore
 
-### ⚙️ **Settings & Configuration**
-- Shop information setup
-- User management
-- General application settings
-- Currency and date format options
-- Automatic daily backup
+### 💾 Backup & Restore
+- Full system backup with selective options
+- Scheduled automatic backups
+- Data import/export functionality
+- Backup history management
+- Safe restore with merge/replace options
 
-### 💾 **Data Management**
-- Local storage-based data persistence
-- Automatic daily backups
-- Manual backup and restore
-- Data export capabilities
+### 🛠️ Built-in Tools
+- **Calculator**: Professional calculator with keyboard support
+- **Number to Words**: Convert amounts to words (English/Bengali)
+- **Auto Logout**: Configurable session timeout with warnings
 
-## 🛠️ Installation & Setup
+### 📱 Modern Features
+- **PWA Support**: Install as a mobile/desktop app
+- **Responsive Design**: Works perfectly on all devices
+- **Offline Capable**: Full functionality without internet
+- **Touch Friendly**: Optimized for touch devices
+- **Keyboard Shortcuts**: Power user features
+- **Dark/Light Theme**: Professional appearance
 
-### Prerequisites
+## 🎯 Technology Stack
+
+- **Frontend**: HTML5, CSS3 (Tailwind CSS), Vanilla JavaScript
+- **Charts**: Chart.js for data visualization
+- **Barcode**: JSBarcode for barcode generation
+- **Scanning**: QuaggaJS for barcode scanning
+- **Storage**: LocalStorage for data persistence
+- **PWA**: Service Worker for offline functionality
+
+## 📋 Requirements
+
 - Modern web browser (Chrome, Firefox, Safari, Edge)
-- Local web server (Python, Node.js, or any HTTP server)
+- No server required - runs entirely in the browser
+- Camera access for barcode scanning (optional)
+- Local storage enabled
 
-### Quick Start
+## 🚀 Quick Start
 
-1. **Download the software**
+### Option 1: GitHub Pages Deployment
+
+1. **Fork this repository**
+2. **Enable GitHub Pages**:
+   - Go to repository Settings
+   - Scroll to Pages section
+   - Select source: Deploy from a branch
+   - Choose branch: main
+   - Folder: / (root)
+3. **Access your app**: `https://yourusername.github.io/repository-name`
+
+### Option 2: Local Development
+
+1. **Clone the repository**:
    ```bash
-   # Extract the billing-software-localhost folder to your desired location
+   git clone https://github.com/yourusername/zovatu-billing-tool.git
+   cd zovatu-billing-tool
    ```
 
-2. **Start a local web server**
+2. **Serve locally**:
+   ```bash
+   # Using Python
+   python -m http.server 8000
    
-   **Option A: Using Python (Recommended)**
-   ```bash
-   cd billing-software-localhost
-   python3 -m http.server 8080
-   ```
+   # Using Node.js
+   npx serve .
    
-   **Option B: Using Node.js**
-   ```bash
-   cd billing-software-localhost
-   npx http-server -p 8080
-   ```
-   
-   **Option C: Using PHP**
-   ```bash
-   cd billing-software-localhost
-   php -S localhost:8080
+   # Using PHP
+   php -S localhost:8000
    ```
 
-3. **Access the application**
-   - Open your web browser
-   - Navigate to `http://localhost:8080`
-
-4. **First-time login**
-   - **Username**: `admin`
-   - **Password**: `admin123`
-   - **Role**: Admin
+3. **Open in browser**: `http://localhost:8000`
 
 ## 📖 User Guide
 
 ### Initial Setup
 
-1. **Login as Admin**
-   - Use the default admin credentials
-   - Select "Admin" role from the dropdown
+1. **Access the application** through your deployed URL
+2. **Login** with default credentials (if implemented) or set up admin PIN
+3. **Configure business settings**:
+   - Go to Settings → Business Information
+   - Enter your business details
+   - Configure invoice settings and tax rates
+   - Set up print preferences
 
-2. **Configure Shop Information**
-   - Go to Settings → Shop Information
-   - Fill in your business details (name, address, phone, email)
-   - Save the configuration
+### Adding Products
 
-3. **Add Products**
-   - Navigate to Products
-   - Click "Add Product"
-   - Fill in product details
-   - Generate barcode automatically or enter custom
-   - Save the product
-
-4. **Add Customers** (Optional)
-   - Go to Customers
-   - Add customer information
-   - Set customer type (Regular/Wholesale/Retail)
+1. **Navigate to Products** page
+2. **Click "Add Product"** button
+3. **Fill in product details**:
+   - Name, code, category
+   - Purchase price (admin only) and selling price
+   - Stock quantity and minimum stock level
+   - Product image (optional)
+4. **Generate barcode** automatically or manually
+5. **Save** the product
 
 ### Creating Invoices
 
-1. **Standard Invoice Creation**
-   - Go to Sales → Create Invoice
-   - Select customer (or leave blank for walk-in)
-   - Search and add products
-   - Apply discounts if needed
-   - Save and print invoice
-
-2. **Scanner-Based Billing**
-   - Go to Sales → Scanner Billing
-   - Scan product barcodes or enter codes manually
+1. **Go to Invoices** page
+2. **Click "New Invoice"**
+3. **Select customer** or use walk-in customer
+4. **Add products**:
+   - Search by name/code
+   - Scan barcode using camera
    - Adjust quantities as needed
-   - Complete sale and print receipt
+5. **Apply discounts** and tax if applicable
+6. **Process payment** and print receipt
 
-### User Management
+### Managing Customers
 
-1. **Adding New Users**
-   - Go to Settings → User Management
-   - Click "Add User"
-   - Set username, password, and role
-   - Save user
+1. **Navigate to Customers** page
+2. **Add new customers** with contact details
+3. **Track due amounts** and payment history
+4. **Generate customer statements**
+5. **Set credit limits** and payment terms
 
-2. **Role Permissions**
-   - **Admin**: Full access to all features
-   - **Salesman**: Limited to products and sales only
+### Viewing Reports
 
-### Data Backup
+1. **Access Reports** page
+2. **Select date range** and filters
+3. **View analytics**:
+   - Sales trends and performance
+   - Top selling products
+   - Customer analysis
+   - Financial summaries
+4. **Export reports** in various formats
 
-1. **Automatic Backup**
-   - Enabled by default
-   - Runs daily at 2 AM
-   - Stored in browser's local storage
+### Backup & Restore
 
-2. **Manual Backup**
-   - Go to Settings → Backup & Restore
-   - Click "Download Backup"
-   - Save the JSON file securely
+1. **Go to Backup** page
+2. **Create backups**:
+   - Full system backup
+   - Selective data backup
+   - Schedule automatic backups
+3. **Restore data** when needed
+4. **Manage backup history**
 
-3. **Restore Data**
-   - Go to Settings → Backup & Restore
-   - Select backup file
-   - Confirm restoration (will replace current data)
+## 🔧 Configuration
 
-## 🔧 Technical Details
+### Business Settings
 
-### Architecture
-- **Frontend**: Pure HTML5, CSS3, JavaScript (ES6+)
-- **Storage**: Browser Local Storage
-- **Charts**: Chart.js library
-- **Barcodes**: JsBarcode library
-- **Icons**: Font Awesome
+Configure your business information in Settings:
 
-### File Structure
-```
-billing-software-localhost/
-├── index.html              # Login page
-├── dashboard.html           # Main dashboard
-├── products.html           # Product management
-├── customers.html          # Customer management
-├── sales.html              # Sales and invoicing
-├── purchase.html           # Purchase management
-├── settings.html           # Settings and configuration
-├── css/
-│   └── style.css           # Main stylesheet
-├── js/
-│   ├── auth.js             # Authentication system
-│   ├── utils.js            # Utility functions
-│   ├── products.js         # Product management
-│   ├── customers.js        # Customer management
-│   ├── sales.js            # Sales and invoicing
-│   ├── dashboard.js        # Dashboard functionality
-│   └── settings.js         # Settings management
-└── README.md               # This file
+```javascript
+// Example business configuration
+{
+  "businessName": "Your Business Name",
+  "address": "Business Address",
+  "phone": "+1234567890",
+  "email": "business@example.com",
+  "taxNumber": "TAX123456",
+  "currency": "USD",
+  "taxRate": 10
+}
 ```
 
-### Browser Compatibility
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
+### Print Settings
 
-### Data Storage
-- All data is stored in browser's Local Storage
-- Maximum storage: ~5-10MB (varies by browser)
-- Data persists until manually cleared
+Customize receipt printing:
 
-## 🔒 Security Notes
+```javascript
+// Print configuration
+{
+  "receiptWidth": "80mm",
+  "showLogo": true,
+  "showBusinessInfo": true,
+  "showTaxInfo": true,
+  "footerText": "Thank you for your business!"
+}
+```
 
-- This is a client-side application suitable for single-user or trusted environment use
-- For production use with multiple users, consider implementing server-side authentication
-- Regular backups are recommended to prevent data loss
-- User passwords are stored with basic hashing (not suitable for sensitive environments)
+### System Settings
 
-## 🐛 Troubleshooting
+Configure system behavior:
+
+```javascript
+// System configuration
+{
+  "autoLogout": true,
+  "logoutTimeout": 30, // minutes
+  "lowStockThreshold": 10,
+  "autoBackup": true,
+  "backupInterval": "daily"
+}
+```
+
+## 🎨 Customization
+
+### Themes
+
+The application supports theme customization through CSS variables:
+
+```css
+:root {
+  --primary-color: #3b82f6;
+  --secondary-color: #6b7280;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+}
+```
+
+### Adding Custom Features
+
+The modular architecture allows easy feature additions:
+
+1. Create new JavaScript modules in `assets/js/`
+2. Add corresponding HTML pages
+3. Update navigation in `assets/js/main.js`
+4. Follow existing patterns for consistency
+
+## 📱 PWA Installation
+
+### Desktop Installation
+
+1. **Open the app** in Chrome/Edge
+2. **Look for install icon** in address bar
+3. **Click install** and follow prompts
+4. **App will be added** to desktop/start menu
+
+### Mobile Installation
+
+1. **Open in mobile browser**
+2. **Tap browser menu** (three dots)
+3. **Select "Add to Home Screen"**
+4. **App icon will appear** on home screen
+
+## 🔒 Security Features
+
+- **PIN-based admin access** for sensitive operations
+- **Session management** with auto-logout
+- **Data validation** and sanitization
+- **Local storage encryption** (optional)
+- **Access logging** for audit trails
+
+## 🌐 Browser Compatibility
+
+| Browser | Version | Support |
+|---------|---------|---------|
+| Chrome | 70+ | ✅ Full |
+| Firefox | 65+ | ✅ Full |
+| Safari | 12+ | ✅ Full |
+| Edge | 79+ | ✅ Full |
+| Mobile Safari | 12+ | ✅ Full |
+| Chrome Mobile | 70+ | ✅ Full |
+
+## 📊 Performance
+
+- **Fast loading**: Optimized assets and lazy loading
+- **Responsive**: Smooth performance on all devices
+- **Offline capable**: Full functionality without internet
+- **Memory efficient**: Optimized data structures
+- **Battery friendly**: Minimal background processing
+
+## 🤝 Contributing
+
+1. **Fork the repository**
+2. **Create feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit changes**: `git commit -m 'Add amazing feature'`
+4. **Push to branch**: `git push origin feature/amazing-feature`
+5. **Open Pull Request**
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
 
 ### Common Issues
 
-1. **Application won't load**
-   - Ensure you're running a local web server
-   - Check browser console for errors
-   - Try a different browser
+**Q: Barcode scanning not working?**
+A: Ensure camera permissions are granted and use HTTPS/localhost.
 
-2. **Data not saving**
-   - Check if Local Storage is enabled
-   - Clear browser cache and try again
-   - Ensure sufficient storage space
+**Q: Data not saving?**
+A: Check if local storage is enabled in browser settings.
 
-3. **Barcode not generating**
-   - Check internet connection (CDN dependency)
-   - Verify product code format
-   - Try different barcode type
+**Q: Print not working?**
+A: Verify printer connection and browser print permissions.
 
-4. **Print not working**
-   - Enable pop-ups for the domain
-   - Check browser print settings
-   - Try different print format
+**Q: App not installing as PWA?**
+A: Ensure you're using HTTPS and browser supports PWA.
 
-### Browser Storage Limits
-- If you encounter storage limits, export data and clear old records
-- Consider using the backup feature regularly
+### Getting Help
 
-## 📞 Support
+- **Documentation**: Check this README and inline help
+- **Issues**: Report bugs on GitHub Issues
+- **Discussions**: Use GitHub Discussions for questions
+- **Email**: Contact support@zovatu.com
 
-For technical support or feature requests:
-- Check the troubleshooting section above
-- Review browser console for error messages
-- Ensure all files are properly uploaded to your web server
+## 🎯 Roadmap
 
-## 📄 License
+### Upcoming Features
 
-This software is provided as-is for educational and business use. Feel free to modify and distribute according to your needs.
+- [ ] Multi-language support
+- [ ] Advanced inventory management
+- [ ] Supplier management
+- [ ] Purchase order system
+- [ ] Advanced reporting dashboard
+- [ ] Cloud sync capabilities
+- [ ] Mobile app versions
+- [ ] API integrations
 
-## 🔄 Version History
+### Version History
 
-### v1.0.0 (Current)
-- Initial release
-- Multi-user authentication system
-- Complete product management
-- Sales and invoicing
-- Customer management
-- Dashboard with analytics
-- Settings and configuration
-- Backup and restore functionality
-- Scanner-based billing
-- Flexible printing options
+- **v2.0.0** - Complete rewrite with modern features
+- **v1.5.0** - Added PWA support and offline functionality
+- **v1.0.0** - Initial release with basic billing features
+
+## 🏆 Acknowledgments
+
+- **Chart.js** for beautiful charts
+- **Tailwind CSS** for utility-first styling
+- **JSBarcode** for barcode generation
+- **QuaggaJS** for barcode scanning
+- **FileSaver.js** for file downloads
 
 ---
 
-**Billing Pro** - Professional billing software for modern businesses.
+**Made with ❤️ by the Zovatu Team**
+
+*Transform your business with professional billing software that works everywhere!*
 
