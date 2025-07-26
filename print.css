@@ -1,19 +1,78 @@
 @media print {
+  /* প্রিন্টে শুধুমাত্র .printable অংশ দেখা যাবে */
   body * {
-    visibility: hidden;
+    visibility: hidden !important;
+    height: 0;
+    overflow: hidden;
   }
+
   .printable, .printable * {
-    visibility: visible;
+    visibility: visible !important;
+    height: auto;
+    overflow: visible;
   }
+
   .printable {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
+    padding: 20px;
     font-family: 'Courier New', Courier, monospace;
+    background: white;
+    color: #000;
   }
+
   .receipt {
-    padding: 10px;
     border: 1px dashed #333;
+    padding: 20px;
+    margin: auto;
+    max-width: 400px;
+  }
+
+  .receipt-header {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .receipt-header h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  .receipt-header p {
+    margin: 2px 0;
+    font-size: 12px;
+  }
+
+  .receipt-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+
+  .receipt-body th,
+  .receipt-body td {
+    border-bottom: 1px dashed #999;
+    padding: 5px;
+    text-align: left;
+  }
+
+  .receipt-footer {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 12px;
+    border-top: 1px dashed #ccc;
+    padding-top: 10px;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  @page {
+    size: auto;
+    margin: 10mm;
   }
 }
