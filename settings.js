@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>সেটিংস প্যানেল - Admin Settings</title>
+  <title>⚙️ সেটিংস প্যানেল - Admin</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -56,7 +56,7 @@
 
     <!-- Reset -->
     <section id="resetSettings">
-      <h2>⚠️ রিসেট সফটওয়্যার</h2>
+      <h2>⚠️ সফটওয়্যার রিসেট</h2>
       <button onclick="resetAllData()" style="background:#dc3545;">🔥 সব ডেটা মুছে ফেলুন</button>
     </section>
 
