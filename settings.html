@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>সেটিংস - দোকান সফটওয়্যার</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .settings-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .settings-container h2 {
+      margin-bottom: 15px;
+      color: #0066cc;
+    }
+
+    .settings-group {
+      margin-bottom: 20px;
+    }
+
+    .settings-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .settings-group input,
+    .settings-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .save-btn {
+      background: #0066cc;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .save-btn:hover {
+      background: #004c99;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚙️ দোকান সেটিংস</h1>
+    <p>আপনার দোকানের কনফিগারেশন ও নিয়ন্ত্রণ করুন</p>
+  </header>
+
+  <main>
+    <div class="settings-container">
+
+      <div class="settings-group">
+        <h2>দোকানের তথ্য</h2>
+        <label for="storeName">দোকানের নাম</label>
+        <input type="text" id="storeName" placeholder="যেমনঃ জনতার স্টোর" />
+
+        <label for="storeAddress">ঠিকানা</label>
+        <input type="text" id="storeAddress" placeholder="যেমনঃ গুলিস্তান, ঢাকা" />
+
+        <label for="storePhone">মোবাইল নম্বর</label>
+        <input type="text" id="storePhone" placeholder="যেমনঃ ০১৭xxxxxxxx" />
+      </div>
+
+      <div class="settings-group">
+        <h2>ব্যাকআপ সেটিংস</h2>
+        <label for="backupInterval">স্বয়ংক্রিয় ব্যাকআপ সময় নির্বাচন করুন</label>
+        <select id="backupInterval">
+          <option value="6">প্রতি ৬ ঘণ্টা</option>
+          <option value="8">প্রতি ৮ ঘণ্টা</option>
+          <option value="12">প্রতি ১২ ঘণ্টা</option>
+          <option value="24">প্রতি ২৪ ঘণ্টা</option>
+        </select>
+      </div>
+
+      <div class="settings-group">
+        <h2>ইনভয়েস কাস্টমাইজেশন</h2>
+        <label for="currencySymbol">মুদ্রার চিহ্ন</label>
+        <input type="text" id="currencySymbol" value="৳" />
+
+        <label for="footerNote">রিসিভে নিচের মন্তব্য</label>
+        <input type="text" id="footerNote" placeholder="ধন্যবাদ জানাই!" />
+      </div>
+
+      <button class="save-btn" onclick="saveSettings()">💾 সংরক্ষণ করুন</button>
+    </div>
+  </main>
+
+  <script>
+    // ডামি ফাংশন - চাইলে localStorage বা backend API সংযোগ করা যাবে
+    function saveSettings() {
+      const name = document.getElementById('storeName').value;
+      const address = document.getElementById('storeAddress').value;
+      const phone = document.getElementById('storePhone').value;
+      const backup = document.getElementById('backupInterval').value;
+      const symbol = document.getElementById('currencySymbol').value;
+      const note = document.getElementById('footerNote').value;
+
+      const settings = {
+        name,
+        address,
+        phone,
+        backup,
+        symbol,
+        note
+      };
+
+      localStorage.setItem('shopSettings', JSON.stringify(settings));
+      alert("✅ সেটিংস সংরক্ষণ হয়েছে!");
+    }
+
+    // লোড করার সময় আগের ডেটা বসানো
+    window.onload = () => {
+      const data = JSON.parse(localStorage.getItem('shopSettings') || '{}');
+      if (data.name) document.getElementById('storeName').value = data.name;
+      if (data.address) document.getElementById('storeAddress').value = data.address;
+      if (data.phone) document.getElementById('storePhone').value = data.phone;
+      if (data.backup) document.getElementById('backupInterval').value = data.backup;
+      if (data.symbol) document.getElementById('currencySymbol').value = data.symbol;
+      if (data.note) document.getElementById('footerNote').value = data.note;
+    };
+  </script>
+
+</body>
+</html>
