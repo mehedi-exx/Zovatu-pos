@@ -6,8 +6,31 @@
   <title>বিলিং ক্যালকুলেটর - দোকান সফটওয়্যার</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="print.css" media="print" />
+  <style>
+    /* ইনলাইন স্টাইল শুধু Settings Button এর জন্য */
+    #settingsIcon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      background: #333;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 100;
+    }
+    #settingsIcon:hover {
+      background: #555;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Settings Button -->
+  <button id="settingsIcon" onclick="window.location.href='settings.html'">⚙️</button>
+
   <header>
     <h1>🧾 দোকান ক্যালকুলেটর</h1>
     <p>পণ্যের হিসাব, বিক্রয়, প্রিন্ট রিসিভ, সব একসাথে</p>
