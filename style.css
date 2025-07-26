@@ -100,9 +100,27 @@ button:hover {
 }
 
 @media print {
-  body {
-    background: white;
+  body * {
+    visibility: hidden;
   }
+  .printable, .printable * {
+    visibility: visible;
+  }
+  .printable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .receipt {
+    padding: 10px;
+    border: 1px dashed #333;
+    background: #fff;
+    width: 80mm;
+    margin: auto;
+  }
+
   #printSection {
     display: block;
   }
