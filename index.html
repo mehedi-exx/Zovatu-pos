@@ -1,316 +1,53 @@
+<!-- billing/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zovatu Billing Tool - Dashboard</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Tailwind CSS CDN (for rapid prototyping and modern styling) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style type="text/tailwindcss">
-        @layer base {
-            html { font-family: 'Inter', sans-serif; }
-        }
-    </style>
-
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="assets/css/style.css">
-
-    <!-- Core Libraries CDN -->
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
-    <!-- JSBarcode -->
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-    <!-- FileSaver.js -->
-    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-    <!-- Day.js -->
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
-    <!-- QuaggaJS (will be loaded dynamically or from local assets if needed for webcam scanning) -->
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Billing Software</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-100 flex h-screen">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-gray-800 text-white flex flex-col">
-        <div class="p-4 text-2xl font-bold text-center border-b border-gray-700">
-            Zovatu
-        </div>
-        <nav class="flex-1 p-4">
-            <ul>
-                <li class="mb-2"><a href="index.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-tachometer-alt mr-2"></i> Dashboard</a></li>
-                <li class="mb-2"><a href="products.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-box mr-2"></i> Products</a></li>
-                <li class="mb-2"><a href="invoices.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-file-invoice mr-2"></i> Invoices</a></li>
-                <li class="mb-2"><a href="customers.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-users mr-2"></i> Customers</a></li>
-                <li class="mb-2"><a href="admin.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-user-shield mr-2"></i> Admin</a></li>
-                <li class="mb-2"><a href="backup.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-save mr-2"></i> Backup</a></li>
-                <li class="mb-2"><a href="settings.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-cog mr-2"></i> Settings</a></li>
-                <li class="mb-2"><a href="reports.html" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-chart-line mr-2"></i> Reports</a></li>
-            </ul>
-        </nav>
-        <div class="p-4 border-t border-gray-700 text-center text-sm text-gray-400">
-            &copy; 2025 Zovatu. All rights reserved.
-        </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <!-- Header -->
-        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
-            <h1 class="text-xl font-semibold text-gray-800">Dashboard</h1>
-            <div class="flex items-center space-x-4">
-                <span class="text-gray-600">Admin User</span>
-                <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Logout</button>
-            </div>
-        </header>
-
-        <!-- Page Content -->
-        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-            <div class="container mx-auto">
-                <!-- Welcome Section -->
-                <div class="mb-8">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Welcome to Zovatu Billing Tool!</h2>
-                    <p class="text-gray-600">Manage your business efficiently with our comprehensive billing solution.</p>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button id="quickSale" class="btn btn-primary btn-lg w-full">
-                            <i class="fas fa-plus mr-2"></i> New Sale
-                        </button>
-                        <button id="addProduct" class="btn btn-success btn-lg w-full">
-                            <i class="fas fa-box mr-2"></i> Add Product
-                        </button>
-                        <button id="addCustomer" class="btn btn-warning btn-lg w-full">
-                            <i class="fas fa-user-plus mr-2"></i> Add Customer
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Statistics Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-dollar-sign text-3xl text-green-600"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Today's Sales</p>
-                                <p id="todaysSales" class="text-2xl font-semibold text-gray-900">$0.00</p>
-                                <p id="todaysSalesChange" class="text-sm text-green-600">+0% from yesterday</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-chart-line text-3xl text-blue-600"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Monthly Sales</p>
-                                <p id="monthlySales" class="text-2xl font-semibold text-gray-900">$0.00</p>
-                                <p id="monthlySalesChange" class="text-sm text-blue-600">+0% from last month</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-file-invoice text-3xl text-purple-600"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Total Invoices</p>
-                                <p id="totalInvoices" class="text-2xl font-semibold text-gray-900">0</p>
-                                <p id="invoicesThisMonth" class="text-sm text-purple-600">0 this month</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-users text-3xl text-orange-600"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Total Customers</p>
-                                <p id="totalCustomers" class="text-2xl font-semibold text-gray-900">0</p>
-                                <p id="newCustomersThisMonth" class="text-sm text-orange-600">0 new this month</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts Row -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                    <!-- Sales Chart -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800">Sales Overview</h3>
-                            <select id="salesChartPeriod" class="form-select text-sm">
-                                <option value="7">Last 7 days</option>
-                                <option value="30">Last 30 days</option>
-                                <option value="90">Last 3 months</option>
-                            </select>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="salesChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Top Products Chart -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800">Top Products</h3>
-                            <select id="topProductsPeriod" class="form-select text-sm">
-                                <option value="7">Last 7 days</option>
-                                <option value="30">Last 30 days</option>
-                                <option value="90">Last 3 months</option>
-                            </select>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="topProductsChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Additional Analytics Row -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                    <!-- Recent Activity -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h3>
-                        <div id="recentActivity" class="space-y-3">
-                            <!-- Recent activity items will be populated here -->
-                        </div>
-                        <div class="mt-4">
-                            <a href="invoices.html" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View all invoices →</a>
-                        </div>
-                    </div>
-
-                    <!-- Low Stock Alerts -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Low Stock Alerts</h3>
-                        <div id="lowStockAlerts" class="space-y-3">
-                            <!-- Low stock items will be populated here -->
-                        </div>
-                        <div class="mt-4">
-                            <a href="products.html" class="text-orange-600 hover:text-orange-800 text-sm font-medium">Manage products →</a>
-                        </div>
-                    </div>
-
-                    <!-- Due Payments -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Due Payments</h3>
-                        <div id="duePayments" class="space-y-3">
-                            <!-- Due payments will be populated here -->
-                        </div>
-                        <div class="mt-4">
-                            <a href="customers.html" class="text-red-600 hover:text-red-800 text-sm font-medium">Manage customers →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Enhanced Quick Actions -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                        <a href="invoices.html" class="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                            <i class="fas fa-plus-circle text-2xl text-blue-600 mb-2"></i>
-                            <span class="text-sm font-medium text-blue-800">New Invoice</span>
-                        </a>
-                        <a href="products.html" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                            <i class="fas fa-box text-2xl text-green-600 mb-2"></i>
-                            <span class="text-sm font-medium text-green-800">Add Product</span>
-                        </a>
-                        <a href="customers.html" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                            <i class="fas fa-user-plus text-2xl text-purple-600 mb-2"></i>
-                            <span class="text-sm font-medium text-purple-800">Add Customer</span>
-                        </a>
-                        <a href="reports.html" class="flex flex-col items-center p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
-                            <i class="fas fa-chart-bar text-2xl text-orange-600 mb-2"></i>
-                            <span class="text-sm font-medium text-orange-800">View Reports</span>
-                        </a>
-                        <a href="backup.html" class="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-download text-2xl text-gray-600 mb-2"></i>
-                            <span class="text-sm font-medium text-gray-800">Backup Data</span>
-                        </a>
-                        <a href="settings.html" class="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
-                            <i class="fas fa-cog text-2xl text-indigo-600 mb-2"></i>
-                            <span class="text-sm font-medium text-indigo-800">Settings</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                    <!-- Sales Chart -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-semibold text-gray-800">Sales Trend (Last 7 Days)</h3>
-                            <button id="refreshDashboard" class="btn btn-sm btn-secondary">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="salesChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Product Categories -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Product Categories</h3>
-                        <div class="h-64">
-                            <canvas id="categoryChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Additional Information -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Notifications -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Notifications</h3>
-                        <div id="notifications">
-                            <p class="text-gray-500">Loading notifications...</p>
-                        </div>
-                    </div>
-
-                    <!-- Best Selling Products -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Best Selling Products</h3>
-                        <div id="bestSellingProducts">
-                            <p class="text-gray-500">Loading data...</p>
-                        </div>
-                    </div>
-
-                    <!-- Recent Activity -->
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h3>
-                        <div id="recentActivity">
-                            <p class="text-gray-500">Loading activity...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="left">
+      <h2>Billing Software</h2>
     </div>
+    <div class="right">
+      <a href="https://t.me/your_channel_link" target="_blank">
+        <img src="telegram-icon.svg" alt="Telegram" class="icon" />
+      </a>
+      <a href="settings.html">
+        <img src="settings-icon.svg" alt="Settings" class="icon" />
+      </a>
+    </div>
+  </header>
 
-    <!-- Main JavaScript -->
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/dashboard.js"></script>
-    <script src="assets/js/enhanced-dashboard.js"></script>
-    <script src="assets/js/auto-logout.js"></script>
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Simple Mode -->
+    <section class="billing-mode">
+      <h3>Simple Mode Billing</h3>
+      <input type="number" id="receivedAmount" placeholder="Received Amount (৳)" />
+      <input type="number" id="totalBillAmount" placeholder="Total Bill (৳)" />
+      <button onclick="calculateChange()">Generate Bill</button>
+      <div id="changeOutput"></div>
+    </section>
+
+    <!-- Scanned Product Billing -->
+    <section class="billing-mode">
+      <h3>Scanned Product Billing</h3>
+      <input type="text" id="productCode" placeholder="Scan or Type Product Code" />
+      <div id="productList"></div>
+      <button onclick="generateProductBill()">Generate Product Bill</button>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Mehedi Hasan | Billing System</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
-
