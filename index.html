@@ -2,69 +2,34 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>বিলিং ক্যালকুলেটর - দোকান সফটওয়্যার</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>বিল জেনারেটর</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="print.css" media="print" />
-  <style>
-    /* ইনলাইন স্টাইল শুধু Settings Button এর জন্য */
-    #settingsIcon {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 20px;
-      background: #333;
-      color: white;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 100;
-    }
-    #settingsIcon:hover {
-      background: #555;
-    }
-  </style>
 </head>
 <body>
-
-  <!-- Settings Button -->
-  <button id="settingsIcon" onclick="window.location.href='settings.html'">⚙️</button>
-
   <header>
-    <h1>🧾 দোকান ক্যালকুলেটর</h1>
-    <p>পণ্যের হিসাব, বিক্রয়, প্রিন্ট রিসিভ, সব একসাথে</p>
+    <h1>📦 বিল জেনারেটর</h1>
+    <p>বারকোড স্ক্যান করে প্রোডাক্ট সিলেক্ট করুন</p>
   </header>
 
   <main>
-    <!-- দোকানের তথ্য -->
-    <section id="shop-info">
-      <h2>দোকানের তথ্য</h2>
-      <input type="text" id="shopName" placeholder="দোকানের নাম" />
-      <input type="text" id="shopAddress" placeholder="ঠিকানা" />
-      <input type="text" id="shopPhone" placeholder="মোবাইল নম্বর" />
+    <!-- স্ক্যান সেকশন -->
+    <section>
+      <h2>বারকোড স্ক্যান করুন</h2>
+      <input type="text" id="barcodeInput" placeholder="বারকোড স্ক্যান করুন বা লিখুন" autofocus />
     </section>
 
-    <!-- পণ্য যুক্ত করা -->
-    <section id="add-product">
-      <h2>পণ্য যুক্ত করুন</h2>
-      <input type="text" id="productName" placeholder="পণ্যের নাম" />
-      <input type="number" id="productPrice" placeholder="দাম" />
-      <input type="number" id="productStock" placeholder="স্টক" />
-      <button onclick="addProduct()">যোগ করুন</button>
-    </section>
-
-    <!-- বিক্রয় ক্যালকুলেটর -->
-    <section id="sale-section">
-      <h2>বিক্রয় ক্যালকুলেটর</h2>
+    <!-- স্ক্যানকৃত পণ্য তালিকা -->
+    <section>
+      <h2>পণ্য তালিকা</h2>
       <div id="productList"></div>
-      <button onclick="generateReceipt()">💳 রিসিভ প্রিন্ট</button>
+      <h3>মোট: <span id="totalAmount">৳0</span></h3>
+      <button onclick="generateReceipt()">🧾 বিল প্রিন্ট</button>
     </section>
 
-    <!-- প্রিন্ট সেকশন -->
-    <section id="printSection" class="printable">
-      <!-- এখানে রিসিভ জেনারেট হবে -->
-    </section>
+    <!-- প্রিন্ট রিসিভ -->
+    <section id="printSection" class="printable"></section>
   </main>
 
   <script src="script.js"></script>
