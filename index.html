@@ -1,52 +1,48 @@
-<!-- billing/index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Billing Software</title>
+  <title>বিলিং ক্যালকুলেটর - দোকান সফটওয়্যার</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="print.css" media="print" />
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="left">
-      <h2>Billing Software</h2>
-    </div>
-    <div class="right">
-      <a href="https://t.me/your_channel_link" target="_blank">
-        <img src="telegram-icon.svg" alt="Telegram" class="icon" />
-      </a>
-      <a href="settings.html">
-        <img src="settings-icon.svg" alt="Settings" class="icon" />
-      </a>
-    </div>
+  <header>
+    <h1>🧾 দোকান ক্যালকুলেটর</h1>
+    <p>পণ্যের হিসাব, বিক্রয়, প্রিন্ট রিসিভ, সব একসাথে</p>
   </header>
 
-  <!-- Main Content -->
-  <main class="main-container">
-    <!-- Simple Mode -->
-    <section class="billing-mode">
-      <h3>Simple Mode Billing</h3>
-      <input type="number" id="receivedAmount" placeholder="Received Amount (৳)" />
-      <input type="number" id="totalBillAmount" placeholder="Total Bill (৳)" />
-      <button onclick="calculateChange()">Generate Bill</button>
-      <div id="changeOutput"></div>
+  <main>
+    <!-- দোকানের তথ্য -->
+    <section id="shop-info">
+      <h2>দোকানের তথ্য</h2>
+      <input type="text" id="shopName" placeholder="দোকানের নাম" />
+      <input type="text" id="shopAddress" placeholder="ঠিকানা" />
+      <input type="text" id="shopPhone" placeholder="মোবাইল নম্বর" />
     </section>
 
-    <!-- Scanned Product Billing -->
-    <section class="billing-mode">
-      <h3>Scanned Product Billing</h3>
-      <input type="text" id="productCode" placeholder="Scan or Type Product Code" />
+    <!-- পণ্য যুক্ত করা -->
+    <section id="add-product">
+      <h2>পণ্য যুক্ত করুন</h2>
+      <input type="text" id="productName" placeholder="পণ্যের নাম" />
+      <input type="number" id="productPrice" placeholder="দাম" />
+      <input type="number" id="productStock" placeholder="স্টক" />
+      <button onclick="addProduct()">যোগ করুন</button>
+    </section>
+
+    <!-- বিক্রয় ক্যালকুলেটর -->
+    <section id="sale-section">
+      <h2>বিক্রয় ক্যালকুলেটর</h2>
       <div id="productList"></div>
-      <button onclick="generateProductBill()">Generate Product Bill</button>
+      <button onclick="generateReceipt()">💳 রিসিভ প্রিন্ট</button>
+    </section>
+
+    <!-- প্রিন্ট সেকশন -->
+    <section id="printSection" class="printable">
+      <!-- এখানে রিসিভ জেনারেট হবে -->
     </section>
   </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; 2025 Mehedi Hasan | Billing System</p>
-  </footer>
 
   <script src="script.js"></script>
 </body>
