@@ -1,127 +1,135 @@
-let products = [];
-let sales = [];
+// প্রোডাক্ট ডেটাবেইজ (ডেমো জন্য)
+const productDatabase = {
+  "123456789012": { name: "চিনি", price: 60 },
+  "111222333444": { name: "তেল", price: 160 },
+  "999888777666": { name: "সাবান", price: 45 },
+  "555666777888": { name: "ডাল", price: 95 },
+  "321321321321": { name: "লবণ", price: 25 }
+};
 
-// পণ্য যোগ করা
-function addProduct() {
-  const name = document.getElementById("productName").value;
-  const price = parseFloat(document.getElementById("productPrice").value);
-  const stock = parseInt(document.getElementById("productStock").value);
+let scannedProducts = [];
 
-  if (!name || isNaN(price) || isNaN(stock)) {
-    alert("সব তথ্য সঠিকভাবে পূরণ করুন।");
-    return;
+// বারকোড হ্যান্ডলার
+function handleBarcode(event) {
+  if (event.key === "Enter") {
+    const barcode = event.target.value.trim();
+    if (barcode && productDatabase[barcode]) {
+      addProduct(barcode);
+    } else {
+      alert("এই বারকোড এর কোনো পণ্য খুঁজে পাওয়া যায়নি!");
+    }
+    event.target.value = "";
   }
-
-  const product = {
-    name,
-    price,
-    stock,
-    sold: 0
-  };
-  products.push(product);
-  displayProductList();
-  clearProductForm();
 }
 
-// প্রোডাক্ট লিস্ট দেখানো
-function displayProductList() {
-  const productList = document.getElementById("productList");
-  productList.innerHTML = "";
+// প্রোডাক্ট যুক্ত করা
+function addProduct(barcode) {
+  const product = productDatabase[barcode];
+  const existing = scannedProducts.find(p => p.barcode === barcode);
 
-  products.forEach((product, index) => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <strong>${product.name}</strong> - দাম: ৳${product.price} | স্টক: ${product.stock}
-      <br/>
-      বিক্রি: <input type="number" id="sellQty${index}" placeholder="পরিমাণ" style="width:80px;" />
-      <button onclick="sellProduct(${index})">বিক্রি</button>
-      <hr/>
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    scannedProducts.push({
+      barcode,
+      name: product.name,
+      price: product.price,
+      quantity: 1
+    });
+  }
+
+  renderProductList();
+}
+
+// প্রোডাক্ট লিস্ট রেন্ডার
+function renderProductList() {
+  const list = document.getElementById("productList");
+  const totalDisplay = document.getElementById("totalAmount");
+  list.innerHTML = "";
+  let total = 0;
+
+  scannedProducts.forEach((p, index) => {
+    const row = document.createElement("div");
+    row.className = "product-row";
+    row.innerHTML = `
+      <strong>${p.name}</strong> - ${p.price} টাকা × 
+      <input type="number" min="1" value="${p.quantity}" onchange="updateQuantity(${index}, this.value)" />
+      = ${p.price * p.quantity} টাকা
+      <button onclick="removeProduct(${index})">❌</button>
     `;
-    productList.appendChild(div);
-  });
-}
-
-// প্রোডাক্ট বিক্রি করা
-function sellProduct(index) {
-  const qtyInput = document.getElementById("sellQty" + index);
-  const qty = parseInt(qtyInput.value);
-
-  if (isNaN(qty) || qty <= 0) {
-    alert("সঠিক বিক্রয় পরিমাণ দিন।");
-    return;
-  }
-
-  if (qty > products[index].stock) {
-    alert("পর্যাপ্ত স্টক নেই!");
-    return;
-  }
-
-  products[index].stock -= qty;
-  products[index].sold += qty;
-
-  sales.push({
-    name: products[index].name,
-    price: products[index].price,
-    quantity: qty,
-    total: qty * products[index].price
+    list.appendChild(row);
+    total += p.price * p.quantity;
   });
 
-  displayProductList();
+  totalDisplay.textContent = total;
 }
 
-// প্রোডাক্ট ফর্ম ক্লিয়ার করা
-function clearProductForm() {
-  document.getElementById("productName").value = "";
-  document.getElementById("productPrice").value = "";
-  document.getElementById("productStock").value = "";
+// কোয়ান্টিটি আপডেট
+function updateQuantity(index, newQty) {
+  scannedProducts[index].quantity = parseInt(newQty);
+  renderProductList();
 }
 
-// রিসিভ তৈরি ও প্রিন্ট করা
+// পণ্য রিমুভ
+function removeProduct(index) {
+  scannedProducts.splice(index, 1);
+  renderProductList();
+}
+
+// রিসিভ জেনারেট
 function generateReceipt() {
+  if (scannedProducts.length === 0) return alert("কোনো পণ্য যোগ করা হয়নি!");
+
   const shopName = document.getElementById("shopName").value || "দোকানের নাম";
   const shopAddress = document.getElementById("shopAddress").value || "ঠিকানা";
   const shopPhone = document.getElementById("shopPhone").value || "মোবাইল";
 
-  let receiptHTML = `
+  const printDiv = document.getElementById("printSection");
+  const now = new Date();
+  const formattedTime = now.toLocaleString("bn-BD");
+
+  let html = `
     <div class="receipt">
       <h2>${shopName}</h2>
       <p>${shopAddress}</p>
       <p>মোবাইল: ${shopPhone}</p>
-      <hr/>
-      <table>
+      <hr />
+      <p><strong>তারিখ:</strong> ${formattedTime}</p>
+      <table style="width:100%; font-size:14px;">
         <thead>
           <tr>
             <th>পণ্য</th>
+            <th>দর</th>
             <th>পরিমাণ</th>
-            <th>দাম</th>
             <th>মোট</th>
           </tr>
         </thead>
         <tbody>
   `;
 
-  let total = 0;
-  sales.forEach(item => {
-    total += item.total;
-    receiptHTML += `
+  let grandTotal = 0;
+  scannedProducts.forEach(p => {
+    const lineTotal = p.price * p.quantity;
+    html += `
       <tr>
-        <td>${item.name}</td>
-        <td>${item.quantity}</td>
-        <td>৳${item.price}</td>
-        <td>৳${item.total}</td>
+        <td>${p.name}</td>
+        <td>${p.price}</td>
+        <td>${p.quantity}</td>
+        <td>${lineTotal}</td>
       </tr>
     `;
+    grandTotal += lineTotal;
   });
 
-  receiptHTML += `
+  html += `
         </tbody>
       </table>
-      <hr/>
-      <p><strong>মোট: ৳${total}</strong></p>
-      <p>ধন্যবাদ!</p>
+      <hr />
+      <h3>মোট payable: ${grandTotal} টাকা</h3>
+      <p style="text-align:center;">ধন্যবাদ! আবার আসবেন।</p>
     </div>
   `;
 
-  document.getElementById("printSection").innerHTML = receiptHTML;
+  printDiv.innerHTML = html;
   window.print();
 }
